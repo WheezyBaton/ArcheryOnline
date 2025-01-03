@@ -1,11 +1,12 @@
 class Archer:
-    def __init__(self, name, last_name, birth_year, gender, email,license_number = None, shots = None, chord = None):
+    def __init__(self, name, last_name, birth_year, gender, email, club_name,license_number = None, shots = None, chord = None):
         self.name = name
         self.last_name = last_name
         self.birth_year = birth_year
         self.gender = gender
         self.license_number = license_number
         self.email = email
+        self.club_name = club_name
         self.shots = shots
         self.chord = chord
         self.trainings = []
