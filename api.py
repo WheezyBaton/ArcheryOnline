@@ -60,3 +60,29 @@ def add_tournament(email):
     account.add_tournament(data["distance"], data["score"])
     return jsonify({"message": "Tournament added"}), 200
 
+@app.route("/archer/<email>", methods=['UPDATE'])
+def update_account(email):
+    data = request.get_json()
+    account = AccountsRegistry.find_account_by_email(email)
+    if account is None:
+        return jsonify({"message": "Account not found"}), 404
+    if account:
+        if "name" in data:
+            account.name = data["name"]
+        if "last_name" in data:
+            account.last_name = data["last_name"]
+        if "birth_year" in data:
+            account.birth_year = data["birth_year"]
+        if "gender" in data:
+            account.gender = data["gender"]
+        if "email" in data:
+            account.email = data["email"]
+        if "license_number" in data:
+            account.license_number = data["license_number"]
+        if "shots" in data:
+            account.shots = data["shots"]
+        if "chord" in data:
+            account.chord = data["chord"]
+        return jsonify({"message": "Account updated"}), 200
+    else:
+        return jsonify({"message": "Account not found"}), 404
