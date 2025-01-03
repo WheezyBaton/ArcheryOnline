@@ -147,3 +147,31 @@ def assign_archer_to_club(club_name, email):
 
     club.archers.append(archer)
     return jsonify({"message": f"Archer {archer.name} {archer.last_name} assigned to club {club_name}"}), 200
+
+@app.route("/archer/<email>/equipment/wear", methods=['PATCH'])
+def update_equipment_wear(club_name, email):
+    data = request.get_json()
+
+    new_shots = data.get("new_shots")
+    if new_shots is None or not isinstance(new_shots, int) or new_shots <= 0:
+        return jsonify({"message": "Invalid number of new shots provided"}), 400
+
+    archer = ArcherRegistry.find_account_by_email(email)
+    if not archer:
+        return jsonify({"message": f"Archer with email {email} not found"}), 404
+
+    if archer.shots:
+        archer.shots[-1] += new_shots
+    else:
+        return jsonify({"message": "Archer does not have a set of arrows assigned"}), 400
+
+    if archer.chord:
+        archer.chord[-1] += new_shots
+    else:
+        return jsonify({"message": "Archer does not have a bowstring assigned"}), 400
+
+    return jsonify({
+        "message": "Equipment wear updated",
+        "arrows_wear": archer.shots[-1],
+        "chord_wear": archer.chord[-1],
+    }), 200
