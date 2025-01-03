@@ -175,3 +175,34 @@ def update_equipment_wear(club_name, email):
         "arrows_wear": archer.shots[-1],
         "chord_wear": archer.chord[-1],
     }), 200
+
+@app.route("/archer/<email>/tournament/indoor", methods=['POST'])
+def add_indoor_tournament(email):
+
+    data = request.get_json()
+    distance = data.get("distance")
+    series = data.get("series")
+
+    if distance is None or not isinstance(distance, (int, float)) or distance <= 0:
+        return jsonify({"message": "Invalid or missing distance"}), 400
+
+    if not series or not isinstance(series, list) or len(series) != 10:
+        return jsonify({"message": "Invalid or missing series data. Must be a list of 10 series"}), 400
+
+    for s in series:
+        if not isinstance(s, list) or len(s) != 3 or not all(isinstance(score, int) and 0 <= score <= 10 for score in s):
+            return jsonify({"message": "Each series must contain exactly 3 scores (integers between 0 and 10)"}), 400
+
+    archer = ArcherRegistry.find_account_by_email(email)
+    if not archer:
+        return jsonify({"message": f"Archer with email {email} not found"}), 404
+
+    total_score = sum(sum(s) for s in series)
+    tournament = {
+        "type": "indoor",
+        "distance": distance,
+        "total_score": total_score,
+        "series": series
+    }
+    archer.tournaments.append(tournament)
+    return jsonify({"message": "Indoor tournament added", "tournament": tournament}), 201
