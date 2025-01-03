@@ -86,3 +86,40 @@ def update_account(email):
         return jsonify({"message": "Account updated"}), 200
     else:
         return jsonify({"message": "Account not found"}), 404
+    
+@app.route("/archer/<email>", methods=['DELETE'])
+def delete_account(email):
+    account = AccountsRegistry.find_account_by_email(email)
+    if account is None:
+        return jsonify({"message": "Account not found"}), 404
+    AccountsRegistry.accounts.remove(account)
+    return jsonify({"message": "Account deleted"}), 200
+
+@app.route("/archer/<email>/personal_data", methods=['GET'])
+def get_account(email):
+    account = AccountsRegistry.find_account_by_email(email)
+    if account is None:
+        return jsonify({"message": "Account not found"}), 404
+    return jsonify({"name": account.name, "last_name": account.last_name, "birth_year": account.birth_year, "gender": account.gender, "email": account.email, "license_number": account.license_number}), 200
+
+@app.route("/archer/<email>/equipment", methods=['GET'])
+def get_equipment(email):
+    account = AccountsRegistry.find_account_by_email(email)
+    if account is None:
+        return jsonify({"message": "Account not found"}), 404
+    return jsonify({"shots": account.shots, "chord": account.chord}), 200
+
+@app.route("/archer/<email>/trainings", methods=['GET'])
+def get_trainings(email):
+    account = AccountsRegistry.find_account_by_email(email)
+    if account is None:
+        return jsonify({"message": "Account not found"}), 404
+    return jsonify({"trainings": account.trainings}), 200
+
+@app.route("/archer/<email>/tournaments", methods=['GET'])
+def get_tournaments(email):
+    account = AccountsRegistry.find_account_by_email(email)
+    if account is None:
+        return jsonify({"message": "Account not found"}), 404
+    return jsonify({"tournaments": account.tournaments}), 200
+
