@@ -17,6 +17,18 @@ class Archer:
         date = datetime.now()
         self.trainings.append((quantity_of_shots, date, distance))
         print(f"Training added: {quantity_of_shots} shots at {distance}m on {date}")
+        
+        if self.shots:
+            wear = self.shots[-1][-1]
+            wear += quantity_of_shots
+            self.shots[-1][-1] = wear
+            print(f"Shot wear increased to {wear} due to training")
+
+        if self.chord:
+            wear = self.chord[-1][-1]
+            wear += quantity_of_shots
+            self.chord[-1][-1] = wear
+            print(f"Chord wear increased to {wear} due to training")
     
     def add_license(self, license_number):
         self.license_number = license_number
