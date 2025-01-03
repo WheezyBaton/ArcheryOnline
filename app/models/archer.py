@@ -1,5 +1,5 @@
 from datetime import datetime
-from trainer import Trainer
+from app.models.trainer import Trainer
 
 class Archer:
     def __init__(self, name, last_name, birth_year, gender, email, license_number = None, shots = None, chord = None, trainer = None):
