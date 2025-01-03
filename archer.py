@@ -20,11 +20,11 @@ class Archer:
         self.license_number = license_number
         print(f"License added: {license_number}")
     
-    def add_shots(self, name, model, tip_weight, length, hard, parameter, data_purchased, quantity, wear):
+    def add_shots(self, name, model, tip_weight, length, hard, parameter, data_purchased, quantity, wear = 0):
         self.shots = [name, model, tip_weight, length, hard, parameter, data_purchased, quantity, wear]
         print(f"Shots added: {self.shots}")
 
-    def add_chord(self, data_purchased, quantity, wear):
+    def add_chord(self, data_purchased, quantity, wear = 0):
         self.chord = [data_purchased, quantity, wear]
         print(f"Chord added: {self.chord}")
 
@@ -32,3 +32,17 @@ class Archer:
         date = date.now()
         self.tournaments.append((date, distance, score))
         print(f"Tournament added at {distance}m on {date} with score {score}")
+
+class AccountsRegistry:
+    accounts = []
+
+    @classmethod
+    def add_account(cls, account):
+        cls.accounts.append(account)
+
+    @classmethod
+    def find_account_by_email(cls, email):
+        for account in cls.accounts:
+            if account.email == email:
+                return account
+        return None
