@@ -223,3 +223,19 @@ def add_outdoor_tournament(club_name, email):
     archer.tournaments.append(tournament)
 
     return jsonify({"message": f"{tournament_type.capitalize()} tournament added", "tournament": tournament}), 201
+
+@app.route("/archer/<email>", methods=['DELETE'])
+def delete_from_club(email):
+    account = ArcherRegistry.find_account_by_email(email)
+    if account is None:
+        return jsonify({"message": "Account not found"}), 404
+    
+    club = ClubRegistry.find_club_by_name(account.club_name)
+    if club is None:
+        return jsonify({"message": "Club not found"}), 404
+    
+    if account in club.archers:
+        club.archers.remove(account)
+        return jsonify({"message": "Account deleted from club"}), 200
+    else:
+        return jsonify({"message": "Account not found in club"}), 404
