@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from archer import Archer, ArcherRegistry
 from club import Club, ClubRegistry
+from datetime import datetime
 
 app = Flask(__name__)
 
@@ -148,34 +149,6 @@ def assign_archer_to_club(club_name, email):
     club.archers.append(archer)
     return jsonify({"message": f"Archer {archer.name} {archer.last_name} assigned to club {club_name}"}), 200
 
-@app.route("/archer/<email>/equipment/wear", methods=['PATCH'])
-def update_equipment_wear(club_name, email):
-    data = request.get_json()
-
-    new_shots = data.get("new_shots")
-    if new_shots is None or not isinstance(new_shots, int) or new_shots <= 0:
-        return jsonify({"message": "Invalid number of new shots provided"}), 400
-
-    archer = ArcherRegistry.find_account_by_email(email)
-    if not archer:
-        return jsonify({"message": f"Archer with email {email} not found"}), 404
-
-    if archer.shots:
-        archer.shots[-1] += new_shots
-    else:
-        return jsonify({"message": "Archer does not have a set of arrows assigned"}), 400
-
-    if archer.chord:
-        archer.chord[-1] += new_shots
-    else:
-        return jsonify({"message": "Archer does not have a bowstring assigned"}), 400
-
-    return jsonify({
-        "message": "Equipment wear updated",
-        "arrows_wear": archer.shots[-1],
-        "chord_wear": archer.chord[-1],
-    }), 200
-
 @app.route("/archer/<email>/tournament/indoor", methods=['POST'])
 def add_indoor_tournament(email):
 
@@ -206,3 +179,47 @@ def add_indoor_tournament(email):
     }
     archer.tournaments.append(tournament)
     return jsonify({"message": "Indoor tournament added", "tournament": tournament}), 201
+
+@app.route("/archer/<email>/tournament/outdoor", methods=['POST'])
+def add_outdoor_tournament(club_name, email):
+
+    data = request.get_json()
+    distance = data.get("distance")
+    series = data.get("series")
+
+    if distance is None or not isinstance(distance, (int, float)) or distance <= 0:
+        return jsonify({"message": "Invalid or missing distance"}), 400
+
+    if not series or not isinstance(series, list):
+        return jsonify({"message": "Invalid or missing series data. Must be a list of series"}), 400
+
+    archer = ArcherRegistry.find_account_by_email(email)
+    if not archer:
+        return jsonify({"message": f"Archer with email {email} not found"}), 404
+
+    current_year = datetime.now().year
+    age = current_year - archer.birth_year
+
+    if age < 15:
+        if len(series) != 12 or any(len(s) != 3 for s in series):
+            return jsonify({"message": "For youth tournaments, there must be 12 series with 3 shots each"}), 400
+    else:
+        if len(series) != 6 or any(len(s) != 6 for s in series):
+            return jsonify({"message": "For adult tournaments, there must be 6 series with 6 shots each"}), 400
+
+    for s in series:
+        if not all(isinstance(score, int) and 0 <= score <= 10 for score in s):
+            return jsonify({"message": "Each score must be an integer between 0 and 10"}), 400
+
+    total_score = sum(sum(s) for s in series)
+
+    tournament_type = "outdoor_youth" if age < 15 else "outdoor_adult"
+    tournament = {
+        "type": tournament_type,
+        "distance": distance,
+        "total_score": total_score,
+        "series": series
+    }
+    archer.tournaments.append(tournament)
+
+    return jsonify({"message": f"{tournament_type.capitalize()} tournament added", "tournament": tournament}), 201
