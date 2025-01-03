@@ -4,14 +4,14 @@ from club import Club, ClubRegistry
 
 app = Flask(__name__)
 
-@app.route("/<club_name>/archer", methods=['POST'])
+@app.route("/archer", methods=['POST'])
 def create_account():
     data = request.get_json()
     print(f"Create account request: {data}")
-    ArcherRegistry.add_account(Archer(data["name"], data["last_name"], data["birth_year"], data["gender"], data["email"], data["club_name"]))
+    ArcherRegistry.add_account(Archer(data["name"], data["last_name"], data["birth_year"], data["gender"], data["email"]))
     return jsonify({"message": "Account created"}), 201
 
-@app.route("/<club_name>/archer/<email>/license_number", methods=['PUT'])
+@app.route("/archer/<email>/license_number", methods=['PUT'])
 def add_license(email):
     data = request.get_json()
     print(f"Add license request: {data}")
@@ -21,7 +21,7 @@ def add_license(email):
     account.add_license(data["license_number"])
     return jsonify({"message": "License added"}), 200
 
-@app.route("/<club_name>/archer/<email>/shots", methods=['PUT'])
+@app.route("/archer/<email>/shots", methods=['PUT'])
 def add_shots(email):
     data = request.get_json()
     print(f"Add shots request: {data}")
@@ -31,7 +31,7 @@ def add_shots(email):
     account.add_shots(data["name"], data["model"], data["tip_weight"], data["length"], data["hard"], data["parameter"], data["data_purchased"], data["quantity"])
     return jsonify({"message": "Shots added"}), 200
 
-@app.route("/<club_name>/archer/<email>/chord", methods=['PUT'])
+@app.route("/archer/<email>/chord", methods=['PUT'])
 def add_chord(email):
     data = request.get_json()
     print(f"Add chord request: {data}")
@@ -41,7 +41,7 @@ def add_chord(email):
     account.add_chord(data["data_purchased"], data["quantity"])
     return jsonify({"message": "Chord added"}), 200
 
-@app.route("/<club_name>/archer/<email>/training", methods=['PUT'])
+@app.route("/archer/<email>/training", methods=['PUT'])
 def add_training(email):
     data = request.get_json()
     print(f"Add training request: {data}")
@@ -51,7 +51,7 @@ def add_training(email):
     account.add_training(data["quantity_of_shots"], data["distance"])
     return jsonify({"message": "Training added"}), 200
 
-@app.route("/<club_name>/archer/<email>/tournament", methods=['PUT'])
+@app.route("/archer/<email>/tournament", methods=['PUT'])
 def add_tournament(email):
     data = request.get_json()
     print(f"Add tournament request: {data}")
@@ -61,7 +61,7 @@ def add_tournament(email):
     account.add_tournament(data["distance"], data["score"])
     return jsonify({"message": "Tournament added"}), 200
 
-@app.route("/<club_name>/archer/<email>", methods=['PUT'])
+@app.route("/archer/<email>", methods=['PUT'])
 def update_account(email):
     data = request.get_json()
     account = ArcherRegistry.find_account_by_email(email)
@@ -90,7 +90,7 @@ def update_account(email):
     else:
         return jsonify({"message": "Account not found"}), 404
     
-@app.route("/<club_name>/archer/<email>", methods=['DELETE'])
+@app.route("/archer/<email>", methods=['DELETE'])
 def delete_account(email):
     account = ArcherRegistry.find_account_by_email(email)
     if account is None:
@@ -98,31 +98,52 @@ def delete_account(email):
     ArcherRegistry.accounts.remove(account)
     return jsonify({"message": "Account deleted"}), 200
 
-@app.route("/<club_name>/archer/<email>/personal_data", methods=['GET'])
+@app.route("/archer/<email>/personal_data", methods=['GET'])
 def get_account(email):
     account = ArcherRegistry.find_account_by_email(email)
     if account is None:
         return jsonify({"message": "Account not found"}), 404
     return jsonify({"name": account.name, "last_name": account.last_name, "birth_year": account.birth_year, "gender": account.gender, "email": account.email, "license_number": account.license_number}), 200
 
-@app.route("/<club_name>/archer/<email>/equipment", methods=['GET'])
+@app.route("/archer/<email>/equipment", methods=['GET'])
 def get_equipment(email):
     account = ArcherRegistry.find_account_by_email(email)
     if account is None:
         return jsonify({"message": "Account not found"}), 404
     return jsonify({"shots": account.shots, "chord": account.chord}), 200
 
-@app.route("/<club_name>/archer/<email>/trainings", methods=['GET'])
+@app.route("/archer/<email>/trainings", methods=['GET'])
 def get_trainings(email):
     account = ArcherRegistry.find_account_by_email(email)
     if account is None:
         return jsonify({"message": "Account not found"}), 404
     return jsonify({"trainings": account.trainings}), 200
 
-@app.route("/<club_name>/archer/<email>/tournaments", methods=['GET'])
+@app.route("/archer/<email>/tournaments", methods=['GET'])
 def get_tournaments(email):
     account = ArcherRegistry.find_account_by_email(email)
     if account is None:
         return jsonify({"message": "Account not found"}), 404
     return jsonify({"tournaments": account.tournaments}), 200
 
+@app.route("/archer/<email>/assign", methods=['POST'])
+def assign_archer_to_club(club_name, email):
+    club = next((c for c in ClubRegistry.clubs if c.name == club_name), None)
+    if not club:
+        return jsonify({"message": f"Club {club_name} not found"}), 404
+
+    archer = ArcherRegistry.find_account_by_email(email)
+    if not archer:
+        return jsonify({"message": f"Archer with email {email} not found"}), 404
+
+    for other_club in ClubRegistry.clubs:
+        if archer in other_club.archers:
+            if other_club == club:
+                return jsonify({"message": "Archer is already a member of this club"}), 400
+            else:
+                return jsonify({
+                    "message": f"Archer {archer.name} {archer.last_name} is already a member of another club ({other_club.name})"
+                }), 400
+
+    club.archers.append(archer)
+    return jsonify({"message": f"Archer {archer.name} {archer.last_name} assigned to club {club_name}"}), 200

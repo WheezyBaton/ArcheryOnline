@@ -1,19 +1,20 @@
+from datetime import datetime
+
 class Archer:
-    def __init__(self, name, last_name, birth_year, gender, email, club_name,license_number = None, shots = None, chord = None):
+    def __init__(self, name, last_name, birth_year, gender, email, license_number = None, shots = None, chord = None):
         self.name = name
         self.last_name = last_name
         self.birth_year = birth_year
         self.gender = gender
         self.license_number = license_number
         self.email = email
-        self.club_name = club_name
         self.shots = shots
         self.chord = chord
         self.trainings = []
         self.tournaments = []
     
     def add_trainig(self, quantity_of_shots, distance):
-        date = date.now()
+        date = datetime.now()
         self.trainings.append((quantity_of_shots, date, distance))
         print(f"Training added: {quantity_of_shots} shots at {distance}m on {date}")
     
@@ -30,11 +31,11 @@ class Archer:
         print(f"Chord added: {self.chord}")
 
     def add_tournament(self, distance, score):
-        date = date.now()
+        date = datetime.now()
         self.tournaments.append((date, distance, score))
         print(f"Tournament added at {distance}m on {date} with score {score}")
 
-class AccountsRegistry:
+class ArcherRegistry:
     accounts = []
 
     @classmethod
