@@ -1,7 +1,8 @@
 from datetime import datetime
+from trainer import Trainer
 
 class Archer:
-    def __init__(self, name, last_name, birth_year, gender, email, license_number = None, shots = None, chord = None):
+    def __init__(self, name, last_name, birth_year, gender, email, license_number = None, shots = None, chord = None, trainer = None):
         self.name = name
         self.last_name = last_name
         self.birth_year = birth_year
@@ -12,6 +13,7 @@ class Archer:
         self.chord = chord
         self.trainings = []
         self.tournaments = []
+        self.trainer = trainer
     
     def add_trainig(self, quantity_of_shots, distance):
         date = datetime.now()
@@ -46,6 +48,10 @@ class Archer:
         date = datetime.now()
         self.tournaments.append((date, distance, score))
         print(f"Tournament added at {distance}m on {date} with score {score}")
+
+    def add_trainer(self, trainer):
+        self.trainer = Trainer(trainer["name"], trainer["last_name"], trainer["email"], trainer["phone_number"], trainer["license_number"])
+        print(f"Trainer added: {trainer}")
 
 class ArcherRegistry:
     accounts = []

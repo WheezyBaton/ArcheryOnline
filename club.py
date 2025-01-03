@@ -1,4 +1,5 @@
 from archer import Archer
+from trainer import Trainer
 
 class Club:
     def __init__(self, name, address, phone_number, email):
@@ -7,10 +8,15 @@ class Club:
         self.phone_number = phone_number
         self.email = email
         self.archers = []
+        self.trainers = []
     
     def add_archer(self, archer):
-        self.archers.append(Archer(archer["name"], archer["last_name"], archer["birth_year"], archer["gender"], archer["email"], archer["club_name"]))
+        self.archers.append(Archer(archer["name"], archer["last_name"], archer["birth_year"], archer["gender"], archer["email"]))
         print(f"Archer added: {archer}")
+
+    def add_trainer(self, trainer):
+        self.trainers.append(Trainer(trainer["name"], trainer["last_name"], trainer["email"], trainer["phone_number"], trainer["license_number"]))
+        print(f"Trainer added: {trainer}")
     
 class ClubRegistry:
     clubs = []

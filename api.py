@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from archer import Archer, ArcherRegistry
 from club import Club, ClubRegistry
+from trainer import Trainer
 from datetime import datetime
 
 app = Flask(__name__)
@@ -181,7 +182,7 @@ def add_indoor_tournament(email):
     return jsonify({"message": "Indoor tournament added", "tournament": tournament}), 201
 
 @app.route("/archer/<email>/tournament/outdoor", methods=['POST'])
-def add_outdoor_tournament(club_name, email):
+def add_outdoor_tournament(email):
 
     data = request.get_json()
     distance = data.get("distance")
@@ -239,3 +240,4 @@ def delete_from_club(email):
         return jsonify({"message": "Account deleted from club"}), 200
     else:
         return jsonify({"message": "Account not found in club"}), 404
+    
