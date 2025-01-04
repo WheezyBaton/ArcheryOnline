@@ -77,7 +77,8 @@ def add_outdoor_tournament(email):
 
     tournament_type = "outdoor_youth" if age < 15 else "outdoor_adult"
     tournament = {
-        "type": tournament_type,
+        "date": datetime.now().isoformat(),
+        "type": "indoor",
         "distance": distance,
         "total_score": total_score,
         "series": series

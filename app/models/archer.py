@@ -31,6 +31,14 @@ class Archer:
             wear += quantity_of_shots
             self.chord[-1][-1] = wear
             print(f"Chord wear increased to {wear} due to training")
+
+    def delete_training(self, date):
+        for training in self.trainings:
+            if training[1] == date:
+                self.trainings.remove(training)
+                print(f"Training deleted: {training}")
+                return
+        print(f"Training not found for date {date}")
     
     def add_license(self, license_number):
         self.license_number = license_number

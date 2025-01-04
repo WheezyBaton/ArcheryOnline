@@ -40,17 +40,6 @@ def add_chord(email):
     account.add_chord(data["data_purchased"], data["quantity"])
     return jsonify({"message": "Chord added"}), 200
 
-@app.route("/archer/<email>/training", methods=['PUT'])
-def add_training(email):
-    data = request.get_json()
-    print(f"Add training request: {data}")
-    account = ArcherRegistry.find_account_by_email(email)
-    if account is None:
-        return jsonify({"message": "Account not found"}), 404
-    account.add_training(data["quantity_of_shots"], data["distance"])
-    return jsonify({"message": "Training added"}), 200
-
-
 @app.route("/archer/<email>", methods=['PUT'])
 def update_account(email):
     data = request.get_json()
