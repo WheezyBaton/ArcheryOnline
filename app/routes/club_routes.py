@@ -1,7 +1,53 @@
-from flask import jsonify
+from flask import jsonify, request
 from app import app
-from app.models.club import ClubRegistry
+from app.models.club import ClubRegistry, Club
 from app.models.archer import ArcherRegistry
+
+@app.route("/club/add", methods=['POST'])
+def create_club():
+    data = request.get_json()
+    print(f"Create club request: {data}")
+    ClubRegistry.add_club(Club(data["name"], data["adress"], data["phone_number"], data["email"]))
+    return jsonify({"message": "Club created"}), 201
+
+@app.route("/club/<name>/delete", methods=['DELETE'])
+def delete_club(name):
+    club = ClubRegistry.find_club_by_name(name)
+    if club is None:
+        return jsonify({"message": "Club not found"}), 404
+    ClubRegistry.clubs.remove(club)
+    return jsonify({"message": "Club deleted"}), 200
+
+@app.route("/club/<name>", methods=['GET'])
+def get_club(name):
+    club = ClubRegistry.find_club_by_name(name)
+    if club is None:
+        return jsonify({"message": "Club not found"}), 404
+    return jsonify({"name": club.name, "adress": club.address, "phone_number": club.phone_number, "email": club.email}), 200
+
+@app.route("/club/<name>/archers", methods=['GET'])
+def get_archers_from_club(name):
+    club = ClubRegistry.find_club_by_name(name)
+    if club is None:
+        return jsonify({"message": "Club not found"}), 404
+    for archer in club.archers:
+        print(f"Archer: {archer.name} {archer.last_name} {archer.email} {archer.license_number}")
+
+@app.route("/club/<name>/change", methods=['PUT'])
+def update_club(name):
+    data = request.get_json()
+    club = ClubRegistry.find_club_by_name(name)
+    if club is None:
+        return jsonify({"message": "Club not found"}), 404
+    if "name" in data:
+        club.name = data["name"]
+    if "adress" in data:
+        club.adress = data["adress"]
+    if "phone_number" in data:
+        club.phone_number = data["phone_number"]
+    if "email" in data:
+        club.email = data["email"]
+    return jsonify({"message": "Club updated"}), 200
 
 @app.route("/archer/<email>/assign", methods=['POST'])
 def assign_archer_to_club(club_name, email):

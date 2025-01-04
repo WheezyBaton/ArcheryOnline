@@ -105,5 +105,3 @@ def delete_tournament(email):
             return jsonify({"message": "Tournament deleted"}), 200
 
     return jsonify({"message": "Tournament not found"}), 404
-
-
