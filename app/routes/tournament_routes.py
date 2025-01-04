@@ -10,7 +10,7 @@ def get_tournaments(email):
         return jsonify({"message": "Account not found"}), 404
     return jsonify({"tournaments": account.tournaments}), 200
 
-@app.route("/archer/<email>/tournament/indoor", methods=['POST'])
+@app.route("/archer/<email>/tournaments/indoor", methods=['POST'])
 def add_indoor_tournament(email):
 
     data = request.get_json()
@@ -42,7 +42,7 @@ def add_indoor_tournament(email):
     archer.tournaments.append(tournament)
     return jsonify({"message": "Indoor tournament added", "tournament": tournament}), 201
 
-@app.route("/archer/<email>/tournament/outdoor", methods=['POST'])
+@app.route("/archer/<email>/tournaments/outdoor", methods=['POST'])
 def add_outdoor_tournament(email):
 
     data = request.get_json()
@@ -86,3 +86,24 @@ def add_outdoor_tournament(email):
     archer.tournaments.append(tournament)
 
     return jsonify({"message": f"{tournament_type.capitalize()} tournament added", "tournament": tournament}), 201
+
+@app.route("/archer/<email>/tournaments/delete", methods=['DELETE'])
+def delete_tournament(email):
+    data = request.get_json()
+    date = data.get("date")
+
+    if date is None:
+        return jsonify({"message": "Missing date"}), 400
+
+    archer = ArcherRegistry.find_account_by_email(email)
+    if not archer:
+        return jsonify({"message": f"Archer with email {email} not found"}), 404
+
+    for tournament in archer.tournaments:
+        if tournament["date"] == date:
+            archer.tournaments.remove(tournament)
+            return jsonify({"message": "Tournament deleted"}), 200
+
+    return jsonify({"message": "Tournament not found"}), 404
+
+
