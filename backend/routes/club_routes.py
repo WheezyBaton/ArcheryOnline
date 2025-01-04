@@ -8,7 +8,20 @@ from backend.models.trainer import TrainerRegistry
 def create_club():
     data = request.get_json()
     print(f"Create club request: {data}")
-    ClubRegistry.add_club(Club(data["name"], data["adress"], data["phone_number"], data["email"]))
+    
+    existing_club = None
+    for club in ClubRegistry.clubs:
+        if (club.name == data["name"] or 
+            club.address == data["address"] or 
+            club.phone_number == data["phone_number"] or 
+            club.email == data["email"]):
+            existing_club = club
+            break
+    
+    if existing_club:
+        return jsonify({"message": "Club already exists"}), 409
+    
+    ClubRegistry.add_club(Club(data["name"], data["address"], data["phone_number"], data["email"]))
     return jsonify({"message": "Club created"}), 201
 
 @app.route("/club/<name>/delete", methods=['DELETE'])
