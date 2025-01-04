@@ -1,7 +1,5 @@
-# Created by https://www.toptal.com/developers/gitignore/api/flask,python
-# Edit at https://www.toptal.com/developers/gitignore?templates=flask,python
-
-.DS_Store
+# Created by https://www.toptal.com/developers/gitignore/api/flask,python,react
+# Edit at https://www.toptal.com/developers/gitignore?templates=flask,python,react
 
 ### Flask ###
 instance/*
@@ -261,5 +259,20 @@ poetry.toml
 # LSP config files
 pyrightconfig.json
 
-# End of https://www.toptal.com/developers/gitignore/api/flask,python
+### react ###
+.DS_*
+logs
+**/*.backup.*
+**/*.back.*
+
+node_modules
+bower_components
+
+*.sublime*
+
+psd
+thumb
+sketch
+
+# End of https://www.toptal.com/developers/gitignore/api/flask,python,react
 
