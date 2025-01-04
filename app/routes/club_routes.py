@@ -2,6 +2,7 @@ from flask import jsonify, request
 from app import app
 from app.models.club import ClubRegistry, Club
 from app.models.archer import ArcherRegistry
+from app.models.trainer import TrainerRegistry
 
 @app.route("/club/add", methods=['POST'])
 def create_club():
@@ -71,7 +72,7 @@ def assign_archer_to_club(club_name, email):
     club.archers.append(archer)
     return jsonify({"message": f"Archer {archer.name} {archer.last_name} assigned to club {club_name}"}), 200
 
-@app.route("/archer/<email>", methods=['DELETE'])
+@app.route("/archer/<email>/discharge", methods=['DELETE'])
 def delete_from_club(email):
     account = ArcherRegistry.find_account_by_email(email)
     if account is None:
@@ -83,6 +84,44 @@ def delete_from_club(email):
     
     if account in club.archers:
         club.archers.remove(account)
+        return jsonify({"message": "Account deleted from club"}), 200
+    else:
+        return jsonify({"message": "Account not found in club"}), 404
+    
+@app.route("/trainer/<email>/assign", methods=['POST'])
+def assign_trainer_to_club(club_name, email):
+    club = next((c for c in ClubRegistry.clubs if c.name == club_name), None)
+    if not club:
+        return jsonify({"message": f"Club {club_name} not found"}), 404
+
+    trainer = TrainerRegistry.find_account_by_email(email)
+    if not trainer:
+        return jsonify({"message": f"Trainer with email {email} not found"}), 404
+
+    for other_club in ClubRegistry.clubs:
+        if trainer in other_club.trainers:
+            if other_club == club:
+                return jsonify({"message": "Trainer is already a member of this club"}), 400
+            else:
+                return jsonify({
+                    "message": f"Trainer {trainer.name} {trainer.last_name} is already a member of another club ({other_club.name})"
+                }), 400
+
+    club.trainers.append(trainer)
+    return jsonify({"message": f"Trainer {trainer.name} {trainer.last_name} assigned to club {club_name}"}), 200
+
+@app.route("/trainer/<email>/discharge", methods=['DELETE'])
+def delete_trainer_from_club(email):
+    account = TrainerRegistry.find_account_by_email(email)
+    if account is None:
+        return jsonify({"message": "Account not found"}), 404
+    
+    club = ClubRegistry.find_club_by_name(account.club_name)
+    if club is None:
+        return jsonify({"message": "Club not found"}), 404
+    
+    if account in club.trainers:
+        club.trainers.remove(account)
         return jsonify({"message": "Account deleted from club"}), 200
     else:
         return jsonify({"message": "Account not found in club"}), 404
