@@ -14,6 +14,7 @@ class Archer:
         self.trainings = []
         self.tournaments = []
         self.trainer = trainer
+        self.club_name = None
     
     def add_trainig(self, quantity_of_shots, distance):
         date = datetime.now()

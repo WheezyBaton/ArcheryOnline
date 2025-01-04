@@ -6,6 +6,7 @@ class Trainer:
         self.phone_number = phone_number
         self.license_number = license_number
         self.archers = []
+        self.club_name = None
 
 class TrainerRegistry:
     trainers = []
