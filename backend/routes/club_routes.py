@@ -31,8 +31,17 @@ def get_archers_from_club(name):
     club = ClubRegistry.find_club_by_name(name)
     if club is None:
         return jsonify({"message": "Club not found"}), 404
+    
+    archers_data = []
     for archer in club.archers:
-        print(f"Archer: {archer.name} {archer.last_name} {archer.email} {archer.license_number}")
+        archers_data.append({
+            "name": archer.name,
+            "last_name": archer.last_name,
+            "email": archer.email,
+            "license_number": archer.license_number
+        })
+    
+    return jsonify({"archers": archers_data}), 200
 
 @app.route("/club/<name>/change", methods=['PUT'])
 def update_club(name):
@@ -51,7 +60,13 @@ def update_club(name):
     return jsonify({"message": "Club updated"}), 200
 
 @app.route("/archer/<email>/assign", methods=['POST'])
-def assign_archer_to_club(club_name, email):
+def assign_archer_to_club(email):
+    data = request.get_json()
+    club_name = data.get('club_name')
+
+    if not club_name:
+        return jsonify({"message": "Club name is required"}), 400
+
     club = next((c for c in ClubRegistry.clubs if c.name == club_name), None)
     if not club:
         return jsonify({"message": f"Club {club_name} not found"}), 404
@@ -60,17 +75,17 @@ def assign_archer_to_club(club_name, email):
     if not archer:
         return jsonify({"message": f"Archer with email {email} not found"}), 404
 
-    for other_club in ClubRegistry.clubs:
-        if archer in other_club.archers:
-            if other_club == club:
-                archer.club_name = club_name
-                return jsonify({"message": "Archer is already a member of this club"}), 400
-            else:
-                return jsonify({
-                    "message": f"Archer {archer.name} {archer.last_name} is already a member of another club ({other_club.name})"
-                }), 400
+    if archer.club_name == club_name:
+        return jsonify({"message": f"Archer {archer.name} {archer.last_name} is already a member of {club_name}"}), 400
+    
+    if archer.club_name:
+        other_club = next((c for c in ClubRegistry.clubs if c.name == archer.club_name), None)
+        if other_club:
+            return jsonify({"message": f"Archer {archer.name} {archer.last_name} is already a member of another club ({other_club.name})"}), 400
 
+    archer.club_name = club_name
     club.archers.append(archer)
+
     return jsonify({"message": f"Archer {archer.name} {archer.last_name} assigned to club {club_name}"}), 200
 
 @app.route("/archer/<email>/discharge", methods=['DELETE'])

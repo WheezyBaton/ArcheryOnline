@@ -27,7 +27,7 @@ class ClubRegistry:
 
     @classmethod
     def find_club_by_name(cls, name):
-        for account in cls.accounts:
-            if account.email == name:
+        for account in cls.clubs:
+            if account.name == name:
                 return account
         return None

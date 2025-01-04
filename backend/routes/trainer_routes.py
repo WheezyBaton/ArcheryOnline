@@ -6,7 +6,7 @@ from backend.models.trainer import TrainerRegistry, Trainer
 def create_account():
     data = request.get_json()
     print(f"Create account request: {data}")
-    TrainerRegistry.add_account(Trainer(data["name"], data["last_name"], data["email"], data["phone_nuber"], data["license_number"]))
+    TrainerRegistry.add_account(Trainer(data["name"], data["last_name"], data["email"], data["phone_number"], data["license_number"]))
     return jsonify({"message": "Account created"}), 201
 
 @app.route("/trainer/<email>/delete", methods=['DELETE'])
