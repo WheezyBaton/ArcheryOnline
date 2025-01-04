@@ -1,8 +1,8 @@
 from flask import jsonify, request
-from app import app
-from app.models.club import ClubRegistry, Club
-from app.models.archer import ArcherRegistry
-from app.models.trainer import TrainerRegistry
+from backend import app
+from backend.models.club import ClubRegistry, Club
+from backend.models.archer import ArcherRegistry
+from backend.models.trainer import TrainerRegistry
 
 @app.route("/club/add", methods=['POST'])
 def create_club():

@@ -1,5 +1,5 @@
-from app.models.archer import Archer
-from app.models.trainer import Trainer
+from backend.models.archer import Archer
+from backend.models.trainer import Trainer
 
 class Club:
     def __init__(self, name, address, phone_number, email):

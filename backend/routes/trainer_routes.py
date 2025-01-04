@@ -1,6 +1,6 @@
 from flask import request, jsonify
-from app import app
-from app.models.trainer import TrainerRegistry, Trainer
+from backend import app
+from backend.models.trainer import TrainerRegistry, Trainer
 
 @app.route("/trainer/add", methods=['POST'])
 def create_account():

@@ -1,6 +1,6 @@
 from flask import jsonify, request
-from app import app
-from app.models.archer import ArcherRegistry
+from backend import app
+from backend.models.archer import ArcherRegistry
 
 @app.route("/archer/<email>/trainings", methods=['GET'])
 def get_trainings(email):

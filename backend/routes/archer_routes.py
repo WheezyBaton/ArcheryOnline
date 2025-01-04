@@ -1,6 +1,6 @@
 from flask import request, jsonify
-from app import app
-from app.models.archer import Archer, ArcherRegistry
+from backend import app
+from backend.models.archer import Archer, ArcherRegistry
 
 
 @app.route("/archer/add", methods=['POST'])
