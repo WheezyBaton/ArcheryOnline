@@ -3,14 +3,14 @@ from app import app
 from app.models.archer import Archer, ArcherRegistry
 
 
-@app.route("/archer", methods=['POST'])
+@app.route("/archer/add", methods=['POST'])
 def create_account():
     data = request.get_json()
     print(f"Create account request: {data}")
     ArcherRegistry.add_account(Archer(data["name"], data["last_name"], data["birth_year"], data["gender"], data["email"]))
     return jsonify({"message": "Account created"}), 201
 
-@app.route("/archer/<email>/license_number", methods=['PUT'])
+@app.route("/archer/<email>/change/license_number", methods=['PUT'])
 def add_license(email):
     data = request.get_json()
     print(f"Add license request: {data}")
@@ -20,7 +20,7 @@ def add_license(email):
     account.add_license(data["license_number"])
     return jsonify({"message": "License added"}), 200
 
-@app.route("/archer/<email>/shots", methods=['PUT'])
+@app.route("/archer/<email>/change/shots", methods=['PUT'])
 def add_shots(email):
     data = request.get_json()
     print(f"Add shots request: {data}")
@@ -30,7 +30,7 @@ def add_shots(email):
     account.add_shots(data["name"], data["model"], data["tip_weight"], data["length"], data["hard"], data["parameter"], data["data_purchased"], data["quantity"])
     return jsonify({"message": "Shots added"}), 200
 
-@app.route("/archer/<email>/chord", methods=['PUT'])
+@app.route("/archer/<email>/change/chord", methods=['PUT'])
 def add_chord(email):
     data = request.get_json()
     print(f"Add chord request: {data}")
@@ -40,7 +40,7 @@ def add_chord(email):
     account.add_chord(data["data_purchased"], data["quantity"])
     return jsonify({"message": "Chord added"}), 200
 
-@app.route("/archer/<email>", methods=['PUT'])
+@app.route("/archer/<email>/change", methods=['PUT'])
 def update_account(email):
     data = request.get_json()
     account = ArcherRegistry.find_account_by_email(email)
@@ -59,17 +59,11 @@ def update_account(email):
             account.email = data["email"]
         if "license_number" in data:
             account.license_number = data["license_number"]
-        if "club_name" in data:
-            account.club_name = data["club_name"]
-        if "shots" in data:
-            account.shots = data["shots"]
-        if "chord" in data:
-            account.chord = data["chord"]
         return jsonify({"message": "Account updated"}), 200
     else:
         return jsonify({"message": "Account not found"}), 404
     
-@app.route("/archer/<email>", methods=['DELETE'])
+@app.route("/archer/<email>/delete", methods=['DELETE'])
 def delete_account(email):
     account = ArcherRegistry.find_account_by_email(email)
     if account is None:
