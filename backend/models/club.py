@@ -1,33 +1,14 @@
-from backend.models.archer import Archer
-from backend.models.trainer import Trainer
+from backend import db
 
-class Club:
-    def __init__(self, name, address, phone_number, email):
-        self.name = name
-        self.address = address
-        self.phone_number = phone_number
-        self.email = email
-        self.archers = []
-        self.trainers = []
-    
-    def add_archer(self, archer):
-        self.archers.append(Archer(archer["name"], archer["last_name"], archer["birth_year"], archer["gender"], archer["email"]))
-        print(f"Archer added: {archer}")
+class Club(db.Model):
+    __tablename__ = 'clubs'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), nullable=False)
+    address = db.Column(db.String(50), nullable=False)
+    phone_number = db.Column(db.String(50), nullable=False)
+    email = db.Column(db.String(50), nullable=False)
+    archers = db.relationship("Archer", back_populates="club")
+    trainers = db.relationship("Trainer", back_populates="club")
 
-    def add_trainer(self, trainer):
-        self.trainers.append(Trainer(trainer["name"], trainer["last_name"], trainer["email"], trainer["phone_number"], trainer["license_number"]))
-        print(f"Trainer added: {trainer}")
-    
-class ClubRegistry:
-    clubs = []
-
-    @classmethod
-    def add_club(cls, account):
-        cls.clubs.append(account)
-
-    @classmethod
-    def find_club_by_name(cls, name):
-        for account in cls.clubs:
-            if account.name == name:
-                return account
-        return None
+    def __repr__(self):
+        return f"Club('{self.name}', '{self.address}', '{self.phone_number}', '{self.email}')"
