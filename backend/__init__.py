@@ -1,3 +1,17 @@
 from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 
 app = Flask(__name__)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////Users/sebastianblaszczyk/studia/ArcheryOnline/backend/data/database.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
+
+from backend.routes.archer_routes import *
+from backend.routes.club_routes import *
+from backend.routes.trainer_routes import *
+from backend.routes.tournament_routes import *
+from backend.routes.training_routes import *

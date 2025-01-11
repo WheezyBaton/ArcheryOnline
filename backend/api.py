@@ -1,7 +1,8 @@
-from flask import Flask
-from backend.routes.archer_routes import *
-from backend.routes.club_routes import *
-from backend.routes.tournament_routes import *
+import sys
+import os
+
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
 from backend import app
 
 if __name__ == "__main__":
