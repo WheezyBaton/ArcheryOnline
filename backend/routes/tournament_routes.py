@@ -1,18 +1,19 @@
-from flask import request, jsonify
-from backend import app
-from backend.models.archer import ArcherRegistry
+from flask import jsonify, request
+from backend import app, db
 from datetime import datetime
+from backend.models.archer import Archer
+from backend.models.tournaments import Tournament
 
 @app.route("/archer/<email>/tournaments", methods=['GET'])
 def get_tournaments(email):
-    account = ArcherRegistry.find_account_by_email(email)
-    if account is None:
+    archer = Archer.query.filter_by(email=email).first()
+    if archer is None:
         return jsonify({"message": "Account not found"}), 404
-    return jsonify({"tournaments": account.tournaments}), 200
+    tournaments = [{"date": t.date, "type": t.type, "distance": t.distance, "total_score": t.total_score, "series": t.series} for t in archer.tournaments]
+    return jsonify({"tournaments": tournaments}), 200
 
 @app.route("/archer/<email>/tournaments/indoor", methods=['POST'])
 def add_indoor_tournament(email):
-
     data = request.get_json()
     distance = data.get("distance")
     series = data.get("series")
@@ -27,24 +28,25 @@ def add_indoor_tournament(email):
         if not isinstance(s, list) or len(s) != 3 or not all(isinstance(score, int) and 0 <= score <= 10 for score in s):
             return jsonify({"message": "Each series must contain exactly 3 scores (integers between 0 and 10)"}), 400
 
-    archer = ArcherRegistry.find_account_by_email(email)
+    archer = Archer.query.filter_by(email=email).first()
     if not archer:
         return jsonify({"message": f"Archer with email {email} not found"}), 404
 
     total_score = sum(sum(s) for s in series)
-    tournament = {
-        "date": datetime.now().isoformat(),
-        "type": "indoor",
-        "distance": distance,
-        "total_score": total_score,
-        "series": series
-    }
-    archer.tournaments.append(tournament)
-    return jsonify({"message": "Indoor tournament added", "tournament": tournament}), 201
+    tournament = Tournament(
+        date=datetime.now(),
+        type="indoor",
+        distance=distance,
+        total_score=total_score,
+        series=series,
+        archer_id=archer.id
+    )
+    db.session.add(tournament)
+    db.session.commit()
+    return jsonify({"message": "Indoor tournament added", "tournament": tournament.to_dict()}), 201
 
 @app.route("/archer/<email>/tournaments/outdoor", methods=['POST'])
 def add_outdoor_tournament(email):
-
     data = request.get_json()
     distance = data.get("distance")
     series = data.get("series")
@@ -55,7 +57,7 @@ def add_outdoor_tournament(email):
     if not series or not isinstance(series, list):
         return jsonify({"message": "Invalid or missing series data. Must be a list of series"}), 400
 
-    archer = ArcherRegistry.find_account_by_email(email)
+    archer = Archer.query.filter_by(email=email).first()
     if not archer:
         return jsonify({"message": f"Archer with email {email} not found"}), 404
 
@@ -76,32 +78,30 @@ def add_outdoor_tournament(email):
     total_score = sum(sum(s) for s in series)
 
     tournament_type = "outdoor_youth" if age < 15 else "outdoor_adult"
-    tournament = {
-        "date": datetime.now().isoformat(),
-        "type": "indoor",
-        "distance": distance,
-        "total_score": total_score,
-        "series": series
-    }
-    archer.tournaments.append(tournament)
+    tournament = Tournament(
+        date=datetime.now(),
+        type=tournament_type,
+        distance=distance,
+        total_score=total_score,
+        series=series,
+        archer_id=archer.id
+    )
+    db.session.add(tournament)
+    db.session.commit()
 
-    return jsonify({"message": f"{tournament_type.capitalize()} tournament added", "tournament": tournament}), 201
+    return jsonify({"message": f"{tournament_type.capitalize()} tournament added", "tournament": tournament.to_dict()}), 201
 
-@app.route("/archer/<email>/tournaments/delete", methods=['DELETE'])
-def delete_tournament(email):
-    data = request.get_json()
-    date = data.get("date")
-
-    if date is None:
-        return jsonify({"message": "Missing date"}), 400
-
-    archer = ArcherRegistry.find_account_by_email(email)
+@app.route("/archer/<email>/tournaments/delete/<int:tournament_id>", methods=['DELETE'])
+def delete_tournament(email, tournament_id):
+    archer = Archer.query.filter_by(email=email).first()
     if not archer:
         return jsonify({"message": f"Archer with email {email} not found"}), 404
 
-    for tournament in archer.tournaments:
-        if tournament["date"] == date:
-            archer.tournaments.remove(tournament)
-            return jsonify({"message": "Tournament deleted"}), 200
+    tournament = Tournament.query.filter_by(id=tournament_id, archer_id=archer.id).first()
+    if not tournament:
+        return jsonify({"message": "Tournament not found"}), 404
 
-    return jsonify({"message": "Tournament not found"}), 404
+    db.session.delete(tournament)
+    db.session.commit()
+
+    return jsonify({"message": "Tournament deleted"}), 200
