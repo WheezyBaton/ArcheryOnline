@@ -1,4 +1,4 @@
-from backend import db
+from backend import db, bcrypt
 
 class Archer(db.Model):
     __tablename__ = 'archers'
@@ -17,6 +17,15 @@ class Archer(db.Model):
     trainer = db.relationship("Trainer", back_populates="archers")
     club_id = db.Column(db.Integer, db.ForeignKey('clubs.id'), nullable=True)
     club = db.relationship("Club", back_populates="archers")
+    password_hash = db.Column(db.String(128), nullable=False)
+    role_id = db.Column(db.Integer, db.ForeignKey('roles.id'), nullable=False)
+    role = db.relationship('Role', backref=db.backref('archers', lazy=True))
+
+    def set_password(self, password):
+        self.password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+    
+    def check_password(self, password):
+        return bcrypt.checkpw(password.encode('utf-8'), self.password_hash.encode('utf-8'))
 
     def __repr__(self):
         return f"Archer('{self.name}', '{self.last_name}', '{self.birth_year}')"

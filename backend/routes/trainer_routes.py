@@ -18,7 +18,7 @@ def create_trainer():
         phone_number=data["phone_number"],
         license_number=data["license_number"]
     )
-    
+    new_trainer.set_password(data["password"])
     db.session.add(new_trainer)
     db.session.commit()
 

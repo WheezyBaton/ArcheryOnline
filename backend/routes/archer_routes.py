@@ -17,6 +17,7 @@ def create_archer():
         return jsonify({"message": "Archer already exists"}), 409
     
     archer = Archer(name=data["name"], last_name=data["last_name"], birth_year=data["birth_year"], gender=data["gender"], email=data["email"])
+    archer.set_password(data["password"])
     db.session.add(archer)
     db.session.commit()
     

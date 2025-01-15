@@ -20,6 +20,7 @@ def create_club():
         return jsonify({"message": "Club already exists"}), 409
 
     club = Club(name=data["name"], address=data["address"], phone_number=data["phone_number"], email=data["email"])
+    club.set_password(data["password"])
     db.session.add(club)
     db.session.commit()
 
