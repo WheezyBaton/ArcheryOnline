@@ -1,5 +1,7 @@
 import sys
 import os
+import jwt
+from datetime import datetime, timedelta
 
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 
@@ -22,6 +24,24 @@ with app.app_context():
         db.session.add(archer)
 
     db.session.commit()
+
+def generate_token(user_id, role, expiration_minutes=60):
+    payload = {
+        'user_id': user_id,
+        'role': role,
+        'exp': datetime.utcnow() + timedelta(minutes=expiration_minutes)
+    }
+    token = jwt.encode(payload, app.config['SECRET_KEY'], algorithm='HS256')
+    return token
+
+def decode_token(token):
+    try:
+        decoded = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
+        return decoded
+    except jwt.ExpiredSignatureError:
+        return None
+    except jwt.InvalidTokenError:
+        return None 
 
 if __name__ == "__main__":
     app.run(debug=True)

@@ -14,10 +14,10 @@ class Club(db.Model):
     role = db.relationship('Role', backref=db.backref('clubs', lazy=True))
 
     def set_password(self, password):
-        self.password_hash = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+        self.password_hash = bcrypt.generate_password_hash(password).decode('utf-8')
     
     def check_password(self, password):
-        return bcrypt.checkpw(password.encode('utf-8'), self.password_hash.encode('utf-8'))
+        return bcrypt.check_password_hash(self.password_hash, password)
 
     def __repr__(self):
         return f"Club('{self.name}', '{self.address}', '{self.phone_number}', '{self.email}')"

@@ -16,7 +16,8 @@ def create_trainer():
         last_name=data["last_name"],
         email=data["email"],
         phone_number=data["phone_number"],
-        license_number=data["license_number"]
+        license_number=data["license_number"],
+        role_id=2
     )
     new_trainer.set_password(data["password"])
     db.session.add(new_trainer)
