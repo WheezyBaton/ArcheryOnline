@@ -1,13 +1,14 @@
 from flask import jsonify, request, make_response
 from backend import app
+from backend.api import decode_token
 from backend.models.archer import Archer
 from backend.models.trainer import Trainer
 from backend.models.club import Club
 import jwt
 from datetime import datetime, timedelta
 
-@app.route('/login/<function>', methods=['POST'])
-def login(function):
+@app.route('/login', methods=['POST'])
+def login():
     data = request.get_json()
     email = data.get('email')
     password = data.get('password')
@@ -16,21 +17,25 @@ def login(function):
         return jsonify({'error': 'Email and password are required'}), 400
 
     user = None
-    if function == 'archer':
+    if Archer.query.filter_by(email=email).first() != None:
         user = Archer.query.filter_by(email=email).first()
-    elif function == 'trainer':
+        role = 'Archer'
+    elif Trainer.query.filter_by(email=email).first() != None:
         user = Trainer.query.filter_by(email=email).first()
-    elif function == 'club_manager':
+        role = 'Trainer'
+    elif Club.query.filter_by(email=email).first() != None:
         user = Club.query.filter_by(email=email).first()
+        role = 'Club Manager'
     else:
-        return jsonify({'error': 'Invalid function'}), 400
+        return jsonify({'error': 'Invalid email'}), 400
 
     if user is None or not user.check_password(password):
         return jsonify({'error': 'Invalid email or password'}), 401
 
     token = jwt.encode({
         'user_id': user.id,
-        'role': function,
+        'role': role,
+        'email': user.email,
         'exp': datetime.utcnow() + timedelta(hours=1)
     }, app.config['SECRET_KEY'], algorithm='HS256')
 
@@ -43,31 +48,35 @@ def login(function):
         app.config['JWT_COOKIE_NAME'],
         token,
         httponly=True,
-        secure=True,
+        secure=False,
         samesite='Strict',
         max_age=3600
     )
 
     return response
 
-def decode_token(token):
-    try:
-        decoded = jwt.decode(token, app.config['SECRET_KEY'], algorithms=["HS256"])
-        return decoded
-    except jwt.ExpiredSignatureError:
-        return {"error": "Token has expired"}
-    except jwt.InvalidTokenError:
-        return {"error": "Invalid token"}
-
 @app.route('/protected', methods=['GET'])
 def protected():
     token = request.cookies.get(app.config['JWT_COOKIE_NAME'])
+    print("Token from cookies:", token)
 
-    if not token or token in invalid_tokens:
-        return jsonify({'error': 'Unauthorized access'}), 401
+    if not token:
+        auth_header = request.headers.get('Authorization')
+        print("Authorization header:", auth_header)
+        if auth_header:
+            token = auth_header.split(" ")[1]
+    
+    if not token:
+        print("No token found in cookies or headers")
+        return jsonify({'error': 'No token found'}), 400
+
+    try:
+        token = token.split(" ")[1] if " " in token else token
+    except IndexError:
+        return jsonify({'error': 'Token malformed'}), 400
 
     user_data = decode_token(token)
-    
+
     if "error" in user_data:
         return jsonify({'error': user_data['error']}), 401
 
@@ -78,21 +87,31 @@ invalid_tokens = set()
 @app.route('/logout', methods=['POST'])
 def logout():
     token = request.cookies.get(app.config['JWT_COOKIE_NAME'])
+    print("Token from cookies:", token)
 
-    if token:
-        invalid_tokens.add(token)
-
-        response = make_response({'message': 'Logged out successfully'})
-        response.set_cookie(
-            app.config['JWT_COOKIE_NAME'],
-            '',
-            httponly=True,
-            secure=True,
-            samesite='Strict',
-            max_age=0 
-        )
-
-        return response
-    else:
+    if not token:
+        auth_header = request.headers.get('Authorization')
+        print("Authorization header:", auth_header)
+        if auth_header:
+            token = auth_header.split(" ")[1] 
+    
+    if not token:
+        print("No token found in cookies or headers")
         return jsonify({'error': 'No token found'}), 400
 
+    invalid_tokens.add(token)
+
+    response = make_response({
+        'message': 'Logged out successfully',
+        'access_token': token 
+    })
+    response.set_cookie(
+        app.config['JWT_COOKIE_NAME'],
+        '',
+        httponly=True,
+        secure=True,
+        samesite='Strict',
+        max_age=1
+    )
+
+    return response

@@ -9,8 +9,6 @@ class Archer(db.Model):
     gender = db.Column(db.String(1), nullable=False)
     license_number = db.Column(db.String(4), nullable=True)
     email = db.Column(db.String(30), nullable=False)
-    shots = db.relationship("Shots", back_populates="archer")
-    chord = db.relationship("Chord", back_populates="archer", uselist=True)
     trainings = db.relationship("Training", back_populates="archer")
     tournaments = db.relationship("Tournament", back_populates="archer")
     trainer_id = db.Column(db.Integer, db.ForeignKey('trainers.id'), nullable=True)

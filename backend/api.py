@@ -37,11 +37,14 @@ def generate_token(user_id, role, expiration_minutes=60):
 def decode_token(token):
     try:
         decoded = jwt.decode(token, app.config['SECRET_KEY'], algorithms=['HS256'])
+        print(f"Decoded token: {decoded}")
         return decoded
     except jwt.ExpiredSignatureError:
-        return None
+        print("Error: Token has expired.")
+        return {"error": "Token has expired."}
     except jwt.InvalidTokenError:
-        return None 
+        print("Error: Invalid token.")
+        return {"error": "Invalid token."}
 
-if __name__ == "__main__":
-    app.run(debug=True)
+if __name__ == '__main__':
+    app.run(port=5000, debug=True)

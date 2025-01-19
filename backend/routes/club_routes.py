@@ -8,7 +8,7 @@ from backend.models.club import Club
 def create_club():
     data = request.get_json()
     print(f"Create club request: {data}")
-    
+
     existing_club = Club.query.filter(
         (Club.name == data["name"]) | 
         (Club.address == data["address"]) | 
@@ -19,7 +19,13 @@ def create_club():
     if existing_club:
         return jsonify({"message": "Club already exists"}), 409
 
-    club = Club(name=data["name"], address=data["address"], phone_number=data["phone_number"], email=data["email"], role_id=1)
+    club = Club(
+        name=data["name"], 
+        address=data["address"], 
+        phone_number=data["phone_number"], 
+        email=data["email"], 
+        role_id=1
+    )
     club.set_password(data["password"])
     db.session.add(club)
     db.session.commit()
@@ -127,6 +133,44 @@ def delete_trainer_from_club(email):
     if trainer in club.trainers:
         club.trainers.remove(trainer)
         trainer.club_name = None 
+        db.session.commit()
+        return jsonify({"message": "Account deleted from club"}), 200
+    else:
+        return jsonify({"message": "Account not found in club"}), 404
+    
+@app.route("/archer/<email>/assign/<club_name>", methods=['POST'])
+def assign_archer_to_club(email, club_name):
+    club = Club.query.filter_by(name=club_name).first()
+    if not club:
+        return jsonify({"message": f"Club {club_name} not found"}), 404
+
+    archer = Archer.query.filter_by(email=email).first()
+    if not Archer:
+        return jsonify({"message": f"Trainer with email {email} not found"}), 404
+
+    if Archer.club_id: 
+        return jsonify({
+            "message": f"Trainer {Archer.name} {Archer.last_name} is already a member of another club"
+        }), 400
+
+    Archer.club_id = club.id
+    db.session.commit()
+
+    return jsonify({"message": f"Trainer {Archer.name} {Archer.last_name} assigned to club {club_name}"}), 200
+
+@app.route("/archer/<email>/discharge", methods=['DELETE'])
+def delete_archer_from_club(email):
+    archer = Archer.query.filter_by(email=email).first()
+    if archer is None:
+        return jsonify({"message": "Account not found"}), 404
+    
+    club = Club.query.filter_by(name=archer.club_name).first()
+    if club is None:
+        return jsonify({"message": "Club not found"}), 404
+    
+    if archer in club.trainers:
+        club.trainers.remove(archer)
+        archer.club_name = None 
         db.session.commit()
         return jsonify({"message": "Account deleted from club"}), 200
     else:
