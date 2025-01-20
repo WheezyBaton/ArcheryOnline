@@ -1,22 +1,27 @@
 import { useState, useEffect } from "react";
 import { decodeToken } from "./../utils/decodeToken";
+import {
+      calculateSeriesStats,
+      handleSeriesChange,
+      calculateTotalScore,
+} from "./../utils/tournamentUtils";
 
 const AddChildrenOutdoorTournament = () => {
       const [email, setEmail] = useState("");
       const [distance, setDistance] = useState(18);
       const [series, setSeries] = useState([
-            [10, 9, 8],
-            [9, 8, 10],
-            [8, 8, 9],
-            [7, 10, 9],
-            [10, 8, 10],
-            [9, 9, 8],
-            [10, 10, 9],
-            [8, 7, 9],
-            [10, 8, 9],
-            [9, 9, 10],
-            [8, 6, 7],
-            [10, 9, 8],
+            [0, 0, 0],
+            [0, 0, 0],
+            [0, 0, 9],
+            [0, 0, 0],
+            [0, 0, 0],
+            [0, 0, 0],
+            [0, 0, 0],
+            [0, 0, 0],
+            [0, 0, 0],
+            [0, 0, 0],
+            [0, 0, 0],
+            [0, 0, 0],
       ]);
       const [message, setMessage] = useState("");
       const [loading, setLoading] = useState(false);
@@ -32,17 +37,14 @@ const AddChildrenOutdoorTournament = () => {
             }
       }, []);
 
-      const calculateSeriesStats = (serie) => {
-            const sum = serie.reduce((acc, score) => acc + score, 0);
-            const count10 = serie.filter((score) => score === 10).length;
-            const count9 = serie.filter((score) => score === 9).length;
-            return { sum, count10, count9 };
-      };
-
-      const handleSeriesChange = (e, seriesIndex, shotIndex) => {
-            const newSeries = [...series];
-            newSeries[seriesIndex][shotIndex] = parseInt(e.target.value, 10);
-            setSeries(newSeries);
+      const onSeriesChange = (e, seriesIndex, shotIndex) => {
+            const updatedSeries = handleSeriesChange(
+                  series,
+                  seriesIndex,
+                  shotIndex,
+                  e.target.value
+            );
+            setSeries(updatedSeries);
       };
 
       const handleAddTournament = async (e) => {
@@ -135,7 +137,7 @@ const AddChildrenOutdoorTournament = () => {
                                                                   onChange={(
                                                                         e
                                                                   ) =>
-                                                                        handleSeriesChange(
+                                                                        onSeriesChange(
                                                                               e,
                                                                               seriesIndex,
                                                                               shotIndex
@@ -157,11 +159,16 @@ const AddChildrenOutdoorTournament = () => {
                                     );
                               })}
                         </div>
+                        <div>
+                              <h3>
+                                    Total Score: {calculateTotalScore(series)}
+                              </h3>
+                        </div>
                         <button type="submit" disabled={loading}>
                               {loading ? "Adding..." : "Add Tournament"}
                         </button>
                   </form>
-                  {message && <p>{message}</p>}{" "}
+                  {message && <p>{message}</p>}
             </div>
       );
 };
