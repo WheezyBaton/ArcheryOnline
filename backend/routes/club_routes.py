@@ -32,7 +32,7 @@ def create_club():
 
     return jsonify({"message": "Club created"}), 201
 
-@app.route("/club/<name>/delete", methods=['DELETE'])
+@app.route("/club/delete/<name>", methods=['DELETE'])
 def delete_club(name):
     club = Club.query.filter_by(name=name).first()
     
@@ -58,7 +58,7 @@ def get_club(name):
         "email": club.email
     }), 200
 
-@app.route("/club/<name>/archers", methods=['GET'])
+@app.route("/club/archers/<name>", methods=['GET'])
 def get_archers_from_club(name):
     club = Club.query.filter_by(name=name).first()
 
@@ -78,7 +78,7 @@ def get_archers_from_club(name):
     
     return jsonify({"archers": archers_data}), 200
 
-@app.route("/club/<name>/change", methods=['PUT'])
+@app.route("/club/change/<name>", methods=['PUT'])
 def update_club(name):
     data = request.get_json()
     
@@ -100,7 +100,7 @@ def update_club(name):
     
     return jsonify({"message": "Club updated"}), 200
     
-@app.route("/trainer/<email>/assign/<club_name>", methods=['POST'])
+@app.route("/trainer/assign/<email>/<club_name>", methods=['POST'])
 def assign_trainer_to_club(email, club_name):
     club = Club.query.filter_by(name=club_name).first()
     if not club:
@@ -120,7 +120,7 @@ def assign_trainer_to_club(email, club_name):
 
     return jsonify({"message": f"Trainer {trainer.name} {trainer.last_name} assigned to club {club_name}"}), 200
 
-@app.route("/trainer/<email>/discharge", methods=['DELETE'])
+@app.route("/trainer/discharge/<email>", methods=['DELETE'])
 def delete_trainer_from_club(email):
     trainer = Trainer.query.filter_by(email=email).first()
     if trainer is None:
@@ -138,7 +138,7 @@ def delete_trainer_from_club(email):
     else:
         return jsonify({"message": "Account not found in club"}), 404
     
-@app.route("/archer/<email>/assign/<club_name>", methods=['POST'])
+@app.route("/archer/assign/<email>/<club_name>", methods=['POST'])
 def assign_archer_to_club(email, club_name):
     club = Club.query.filter_by(name=club_name).first()
     if not club:
@@ -158,7 +158,7 @@ def assign_archer_to_club(email, club_name):
 
     return jsonify({"message": f"Trainer {Archer.name} {Archer.last_name} assigned to club {club_name}"}), 200
 
-@app.route("/archer/<email>/discharge", methods=['DELETE'])
+@app.route("/archer/discharge/<email>", methods=['DELETE'])
 def delete_archer_from_club(email):
     archer = Archer.query.filter_by(email=email).first()
     if archer is None:

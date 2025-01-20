@@ -4,7 +4,7 @@ from datetime import datetime
 from backend.models.archer import Archer
 from backend.models.tournaments import Tournament
 
-@app.route("/archer/<email>/tournaments", methods=['GET'])
+@app.route("/archer/tournaments/<email>", methods=['GET'])
 def get_tournaments(email):
     archer = Archer.query.filter_by(email=email).first()
     if archer is None:
@@ -12,14 +12,11 @@ def get_tournaments(email):
     tournaments = [{"date": t.date, "type": t.type, "distance": t.distance, "total_score": t.total_score, "series": t.series} for t in archer.tournaments]
     return jsonify({"tournaments": tournaments}), 200
 
-@app.route("/archer/<email>/tournaments/indoor", methods=['POST'])
+@app.route("/archer/tournaments/indoor/<email>", methods=['POST'])
 def add_indoor_tournament(email):
     data = request.get_json()
-    distance = data.get("distance")
+    distance = 18
     series = data.get("series")
-
-    if distance is None or not isinstance(distance, (int, float)) or distance <= 0:
-        return jsonify({"message": "Invalid or missing distance"}), 400
 
     if not series or not isinstance(series, list) or len(series) != 10:
         return jsonify({"message": "Invalid or missing series data. Must be a list of 10 series"}), 400
@@ -45,7 +42,7 @@ def add_indoor_tournament(email):
     db.session.commit()
     return jsonify({"message": "Indoor tournament added", "tournament": tournament.to_dict()}), 201
 
-@app.route("/archer/<email>/tournaments/outdoor", methods=['POST'])
+@app.route("/archer/tournaments/outdoor/<email>", methods=['POST'])
 def add_outdoor_tournament(email):
     data = request.get_json()
     distance = data.get("distance")
@@ -91,7 +88,7 @@ def add_outdoor_tournament(email):
 
     return jsonify({"message": f"{tournament_type.capitalize()} tournament added", "tournament": tournament.to_dict()}), 201
 
-@app.route("/archer/<email>/tournaments/delete/<int:tournament_id>", methods=['DELETE'])
+@app.route("/archer/tournaments/delete/<email>/<int:tournament_id>", methods=['DELETE'])
 def delete_tournament(email, tournament_id):
     archer = Archer.query.filter_by(email=email).first()
     if not archer:

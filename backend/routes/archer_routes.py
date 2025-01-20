@@ -21,7 +21,7 @@ def create_archer():
     
     return jsonify({"message": "Account created"}), 201
 
-@app.route("/archer/<email>/change", methods=['PUT'])
+@app.route("/archer/change/<email>", methods=['PUT'])
 def update_archer(email):
     data = request.get_json()
     
@@ -47,7 +47,7 @@ def update_archer(email):
 
     return jsonify({"message": "Account updated"}), 200
     
-@app.route("/archer/<email>/delete", methods=['DELETE'])
+@app.route("/archer/delete/<email>", methods=['DELETE'])
 def delete_archer(email):
     account = Archer.query.filter_by(email=email).first()
     

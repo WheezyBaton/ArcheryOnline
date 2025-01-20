@@ -4,7 +4,7 @@ from datetime import datetime
 from backend.models.archer import Archer
 from backend.models.trainings import Training
 
-@app.route("/archer/<email>/trainings", methods=['GET'])
+@app.route("/archer/trainings/<email>", methods=['GET'])
 def get_trainings(email):
     archer = Archer.query.filter_by(email=email).first()
     if archer is None:
@@ -18,7 +18,7 @@ def get_trainings(email):
     
     return jsonify({"trainings": trainings_data}), 200
 
-@app.route("/archer/<email>/trainings/add", methods=['POST'])
+@app.route("/archer/trainings/add/<email>", methods=['POST'])
 def add_training(email):
     data = request.get_json()
     print(f"Add training request: {data}")
@@ -44,7 +44,7 @@ def add_training(email):
     
     return jsonify({"message": "Training added"}), 200
 
-@app.route("/archer/<email>/trainings/delete/<int:training_id>", methods=['DELETE'])
+@app.route("/archer/trainings/delete/<email>/<int:training_id>", methods=['DELETE'])
 def delete_training(email, training_id):
     archer = Archer.query.filter_by(email=email).first()
     if archer is None:
@@ -59,7 +59,7 @@ def delete_training(email, training_id):
 
     return jsonify({"message": "Training deleted"}), 200
 
-@app.route("/archer/<email>/trainings/change/<int:training_id>", methods=['PUT'])
+@app.route("/archer/trainings/change/<email>/<int:training_id>", methods=['PUT'])
 def change_training(email, training_id):
     data = request.get_json()
     print(f"Change training request: {data}")

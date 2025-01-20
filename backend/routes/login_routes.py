@@ -36,6 +36,7 @@ def login():
         'user_id': user.id,
         'role': role,
         'email': user.email,
+        'birth_year': user.birth_year,
         'exp': datetime.utcnow() + timedelta(hours=1)
     }, app.config['SECRET_KEY'], algorithm='HS256')
 

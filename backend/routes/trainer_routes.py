@@ -25,7 +25,7 @@ def create_trainer():
 
     return jsonify({"message": "Account created"}), 201
 
-@app.route("/trainer/<email>/delete", methods=['DELETE'])
+@app.route("/trainer/delete/<email>", methods=['DELETE'])
 def delete_trainer(email):
     trainer = Trainer.query.filter_by(email=email).first()
     if trainer is None:
@@ -36,7 +36,7 @@ def delete_trainer(email):
 
     return jsonify({"message": "Account deleted"}), 200
 
-@app.route("/trainer/<email>/change", methods=['PUT'])
+@app.route("/trainer/change/<email>", methods=['PUT'])
 def update_trainer(email):
     data = request.get_json()
     trainer = Trainer.query.filter_by(email=email).first()
@@ -58,7 +58,7 @@ def update_trainer(email):
 
     return jsonify({"message": "Account updated"}), 200
 
-@app.route("/trainer/<email>/personal_data", methods=['GET'])
+@app.route("/trainer/personal_data/<email>", methods=['GET'])
 def get_trainer(email):
     trainer = Trainer.query.filter_by(email=email).first()
     if trainer is None:
