@@ -80,9 +80,9 @@ const AddArcher = () => {
                                     onChange={(e) => setGender(e.target.value)}
                                     required
                               >
-                                    <option value="Male">Male</option>
-                                    <option value="Female">Female</option>
-                                    <option value="Other">Other</option>
+                                    <option>Other</option>
+                                    <option value="M">Male</option>
+                                    <option value="F">Female</option>
                               </select>
                         </div>
                         <div>

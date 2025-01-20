@@ -3,10 +3,12 @@ import ArcherData from "./ArcherData";
 import Login from "./Login";
 import DeleteArcher from "./DeleteArcher";
 import AddTournament from "./AddTournament";
+import ChangeArcher from "./ChangeArcher";
 
 const Home = () => {
       const [isLoggedOut, setIsLoggedOut] = useState(false);
       const [showDelete, setShowDelete] = useState(false);
+      const [showChangeArcher, setShowChangeArcher] = useState(false); // Stan do kontrolowania widoczności ChangeArcher
 
       const handleLogout = () => {
             localStorage.removeItem("token");
@@ -23,6 +25,10 @@ const Home = () => {
             }
       };
 
+      const handleChangeArcher = () => {
+            setShowChangeArcher(true); // Pokazuje komponent ChangeArcher po kliknięciu przycisku
+      };
+
       if (isLoggedOut) {
             return <Login />;
       }
@@ -34,6 +40,9 @@ const Home = () => {
                   <button onClick={handleDeleteAccount}>Usuń Konto</button>
                   {showDelete && <DeleteArcher />}
                   <AddTournament />
+                  <button onClick={handleChangeArcher}>Zmień Dane</button>
+                  {showChangeArcher && <ChangeArcher />}{" "}
+                  {/* Warunkowe renderowanie ChangeArcher */}
             </div>
       );
 };
