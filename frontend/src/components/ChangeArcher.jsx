@@ -21,7 +21,6 @@ const ChangeArcher = () => {
                   const userEmail = decoded.email;
                   setEmail(userEmail);
 
-                  // Fetch current user data
                   fetch(
                         `http://127.0.0.1:5000/archer/personal_data/${userEmail}`,
                         {
@@ -71,7 +70,7 @@ const ChangeArcher = () => {
                               },
                               body: JSON.stringify({
                                     ...formData,
-                                    email: formData.new_email, // Map new_email to email field
+                                    email: formData.new_email,
                               }),
                         }
                   );
@@ -84,7 +83,7 @@ const ChangeArcher = () => {
                         setMessage(data.message || "An error occurred.");
                   }
             } catch (error) {
-                  setMessage("Failed to update user data.");
+                  setMessage("Failed to update user data.", error);
             } finally {
                   setLoading(false);
             }
