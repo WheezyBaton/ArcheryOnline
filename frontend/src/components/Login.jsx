@@ -1,11 +1,13 @@
 import { useState } from "react";
 import Home from "./Home";
+import AddArcher from "./AddArcher";
 
 export default function Login() {
       const [email, setEmail] = useState("");
       const [password, setPassword] = useState("");
       const [token, setToken] = useState(null);
       const [isLoggedIn, setIsLoggedIn] = useState(false);
+      const [isSignUp, setIsSignUp] = useState(false);
 
       const handleLogin = async (e) => {
             e.preventDefault();
@@ -30,25 +32,36 @@ export default function Login() {
             }
       };
 
+      const handleSignUpClick = () => {
+            setIsSignUp(true);
+      };
+
       if (isLoggedIn) {
             return <Home />;
       }
 
+      if (isSignUp) {
+            return <AddArcher />;
+      }
+
       return (
-            <form onSubmit={handleLogin}>
-                  <input
-                        type="text"
-                        placeholder="Email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                  />
-                  <input
-                        type="password"
-                        placeholder="Password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                  />
-                  <button type="submit">Login</button>
-            </form>
+            <div>
+                  <form onSubmit={handleLogin}>
+                        <input
+                              type="text"
+                              placeholder="Email"
+                              value={email}
+                              onChange={(e) => setEmail(e.target.value)}
+                        />
+                        <input
+                              type="password"
+                              placeholder="Password"
+                              value={password}
+                              onChange={(e) => setPassword(e.target.value)}
+                        />
+                        <button type="submit">Login</button>
+                  </form>
+                  <button onClick={handleSignUpClick}>Załóż Konto</button>
+            </div>
       );
 }
