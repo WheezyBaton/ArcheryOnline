@@ -89,6 +89,10 @@ const ArcherData = () => {
                                     {archerData.license_number ||
                                           "Not available"}
                               </li>
+                              <li>
+                                    <strong>Club:</strong>{" "}
+                                    {archerData.club || "Not available"}
+                              </li>
                         </ul>
                   </div>
             );

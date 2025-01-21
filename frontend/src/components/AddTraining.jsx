@@ -1,9 +1,10 @@
 import { useState } from "react";
-import { decodeToken } from "../utils/decodeToken"; // Upewnij się, że masz funkcję decodeToken
+import { decodeToken } from "../utils/decodeToken";
 
 const AddTraining = () => {
       const [quantityOfShots, setQuantityOfShots] = useState("");
       const [distance, setDistance] = useState("");
+      const [trainingDate, setTrainingDate] = useState("");
       const [message, setMessage] = useState("");
       const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -11,16 +12,19 @@ const AddTraining = () => {
             e.preventDefault();
             setIsSubmitting(true);
 
-            // Pobierz token i dekoduj go
             const token = localStorage.getItem("token");
             if (token) {
                   const decoded = decodeToken(token);
                   const email = decoded.email;
 
+                  const formattedDate = new Date(trainingDate)
+                        .toISOString()
+                        .slice(0, 19);
+
                   const trainingData = {
-                        date: new Date().toISOString(), // Pobieramy bieżącą datę
-                        quantity_of_shots: parseInt(quantityOfShots, 10), // Upewniamy się, że to liczba
-                        distance: parseInt(distance, 10), // Upewniamy się, że to liczba
+                        date: formattedDate,
+                        quantity_of_shots: parseInt(quantityOfShots, 10),
+                        distance: parseInt(distance, 10),
                   };
 
                   try {
@@ -42,7 +46,7 @@ const AddTraining = () => {
                               setMessage(result.message);
                         }
                   } catch (error) {
-                        setMessage("Error adding training");
+                        setMessage("Error adding training", error);
                   } finally {
                         setIsSubmitting(false);
                   }
@@ -73,6 +77,17 @@ const AddTraining = () => {
                                     value={distance}
                                     onChange={(e) =>
                                           setDistance(e.target.value)
+                                    }
+                                    required
+                              />
+                        </div>
+                        <div>
+                              <label>Training Date:</label>
+                              <input
+                                    type="datetime-local"
+                                    value={trainingDate}
+                                    onChange={(e) =>
+                                          setTrainingDate(e.target.value)
                                     }
                                     required
                               />
