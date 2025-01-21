@@ -76,5 +76,7 @@ def get_archer(email):
         "birth_year": account.birth_year,
         "gender": account.gender,
         "email": account.email,
-        "license_number": account.license_number
+        "license_number": account.license_number,
+        "club": account.club,
+
     }), 200
