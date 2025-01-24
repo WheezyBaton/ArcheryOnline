@@ -1,9 +1,11 @@
 from flask import jsonify, request, make_response
-from backend import app
+from backend import app, db
 from backend.api import decode_token
 from backend.models.archer import Archer
 from backend.models.trainer import Trainer
 from backend.models.club import Club
+from backend.models.trainings import Training
+from backend.models.tournaments import Tournament
 import jwt
 from datetime import datetime, timedelta
 
@@ -36,7 +38,7 @@ def login():
         'user_id': user.id,
         'role': role,
         'email': user.email,
-        'birth_year': user.birth_year,
+        'birth_year': getattr(user, 'birth_year', None),
         'exp': datetime.utcnow() + timedelta(hours=1)
     }, app.config['SECRET_KEY'], algorithm='HS256')
 
@@ -116,3 +118,24 @@ def logout():
     )
 
     return response
+
+@app.route("/account/delete/<email>", methods=['DELETE'])
+def delete_account(email):
+    account = Archer.query.filter_by(email=email).first()
+    if account:
+        Training.query.filter_by(archer_id=account.id).delete()
+        Tournament.query.filter_by(archer_id=account.id).delete()
+
+        db.session.delete(account)
+        db.session.commit()
+
+        return jsonify({"message": "Archer account, trainings, and tournaments deleted"}), 200
+
+    account = Trainer.query.filter_by(email=email).first()
+    if account:
+        db.session.delete(account)
+        db.session.commit()
+
+        return jsonify({"message": "Trainer account deleted"}), 200
+    
+    return jsonify({"message": "Account not found"}), 404

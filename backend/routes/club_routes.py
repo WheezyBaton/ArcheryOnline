@@ -44,9 +44,9 @@ def delete_club(name):
 
     return jsonify({"message": "Club deleted"}), 200
 
-@app.route("/club/<name>", methods=['GET'])
-def get_club(name):
-    club = Club.query.filter_by(name=name).first()
+@app.route("/club/<email>", methods=['GET'])
+def get_club(email):
+    club = Club.query.filter_by(email=email).first()
 
     if club is None:
         return jsonify({"message": "Club not found"}), 404
@@ -58,9 +58,9 @@ def get_club(name):
         "email": club.email
     }), 200
 
-@app.route("/club/archers/<name>", methods=['GET'])
-def get_archers_from_club(name):
-    club = Club.query.filter_by(name=name).first()
+@app.route("/club/archers/<email>", methods=['GET'])
+def get_archers_from_club(email):
+    club = Club.query.filter_by(email=email).first()
 
     if club is None:
         return jsonify({"message": "Club not found"}), 404
@@ -78,11 +78,11 @@ def get_archers_from_club(name):
     
     return jsonify({"archers": archers_data}), 200
 
-@app.route("/club/change/<name>", methods=['PUT'])
-def update_club(name):
+@app.route("/club/change/<email>", methods=['PUT'])
+def update_club(email):
     data = request.get_json()
     
-    club = Club.query.filter_by(name=name).first()
+    club = Club.query.filter_by(email=email).first()
     
     if club is None:
         return jsonify({"message": "Club not found"}), 404
@@ -100,15 +100,15 @@ def update_club(name):
     
     return jsonify({"message": "Club updated"}), 200
     
-@app.route("/trainer/assign/<email>/<club_name>", methods=['POST'])
-def assign_trainer_to_club(email, club_name):
-    club = Club.query.filter_by(name=club_name).first()
+@app.route("/trainer/assign/<trainer_email>/<club_email>", methods=['POST'])
+def assign_trainer_to_club(trainer_email, club_email):
+    club = Club.query.filter_by(email=club_email).first()
     if not club:
-        return jsonify({"message": f"Club {club_name} not found"}), 404
+        return jsonify({"message": f"Club {club_email} not found"}), 404
 
-    trainer = Trainer.query.filter_by(email=email).first()
+    trainer = Trainer.query.filter_by(email=trainer_email).first()
     if not trainer:
-        return jsonify({"message": f"Trainer with email {email} not found"}), 404
+        return jsonify({"message": f"Trainer with email {trainer_email} not found"}), 404
 
     if trainer.club_id: 
         return jsonify({
@@ -118,7 +118,7 @@ def assign_trainer_to_club(email, club_name):
     trainer.club_id = club.id
     db.session.commit()
 
-    return jsonify({"message": f"Trainer {trainer.name} {trainer.last_name} assigned to club {club_name}"}), 200
+    return jsonify({"message": f"Trainer {trainer.name} {trainer.last_name} assigned to club {club_email}"}), 200
 
 @app.route("/trainer/discharge/<email>", methods=['DELETE'])
 def delete_trainer_from_club(email):
@@ -138,25 +138,25 @@ def delete_trainer_from_club(email):
     else:
         return jsonify({"message": "Account not found in club"}), 404
     
-@app.route("/archer/assign/<email>/<club_name>", methods=['POST'])
-def assign_archer_to_club(email, club_name):
-    club = Club.query.filter_by(name=club_name).first()
+@app.route("/archer/assign/<archer_email>/<club_email>", methods=['POST'])
+def assign_archer_to_club(archer_email, club_email):
+    club = Club.query.filter_by(email=club_email).first()
     if not club:
-        return jsonify({"message": f"Club {club_name} not found"}), 404
+        return jsonify({"message": f"Club {club_email} not found"}), 404
 
-    archer = Archer.query.filter_by(email=email).first()
-    if not Archer:
-        return jsonify({"message": f"Trainer with email {email} not found"}), 404
+    archer = Archer.query.filter_by(email=archer_email).first()
+    if not archer:
+        return jsonify({"message": f"Archer with email {archer_email} not found"}), 404
 
-    if Archer.club_id: 
+    if archer.club_id: 
         return jsonify({
-            "message": f"Trainer {Archer.name} {Archer.last_name} is already a member of another club"
+            "message": f"Archer {archer.name} {archer.last_name} is already a member of another club"
         }), 400
 
-    Archer.club_id = club.id
+    archer.club_id = club.id
     db.session.commit()
 
-    return jsonify({"message": f"Trainer {Archer.name} {Archer.last_name} assigned to club {club_name}"}), 200
+    return jsonify({"message": f"Archer {archer.name} {archer.last_name} assigned to club {club_email}"}), 200
 
 @app.route("/archer/discharge/<email>", methods=['DELETE'])
 def delete_archer_from_club(email):

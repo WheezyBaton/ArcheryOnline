@@ -46,22 +46,6 @@ def update_archer(email):
     db.session.commit()
 
     return jsonify({"message": "Account updated"}), 200
-    
-@app.route("/archer/delete/<email>", methods=['DELETE'])
-def delete_archer(email):
-    account = Archer.query.filter_by(email=email).first()
-    
-    if not account:
-        return jsonify({"message": "Archer not found"}), 404
-
-    Training.query.filter_by(archer_id=account.id).delete()
-
-    Tournament.query.filter_by(archer_id=account.id).delete()
-
-    db.session.delete(account)
-    db.session.commit()
-
-    return jsonify({"message": "Archer, trainings, and tournaments deleted"}), 200
 
 @app.route("/archer/personal_data/<email>", methods=['GET'])
 def get_archer(email):
@@ -77,6 +61,6 @@ def get_archer(email):
         "gender": account.gender,
         "email": account.email,
         "license_number": account.license_number,
-        "club": account.club,
+        "club": account.club_id,
 
     }), 200

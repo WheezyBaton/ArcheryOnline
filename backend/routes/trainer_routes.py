@@ -25,17 +25,6 @@ def create_trainer():
 
     return jsonify({"message": "Account created"}), 201
 
-@app.route("/trainer/delete/<email>", methods=['DELETE'])
-def delete_trainer(email):
-    trainer = Trainer.query.filter_by(email=email).first()
-    if trainer is None:
-        return jsonify({"message": "Account not found"}), 404
-    
-    db.session.delete(trainer)
-    db.session.commit()
-
-    return jsonify({"message": "Account deleted"}), 200
-
 @app.route("/trainer/change/<email>", methods=['PUT'])
 def update_trainer(email):
     data = request.get_json()
