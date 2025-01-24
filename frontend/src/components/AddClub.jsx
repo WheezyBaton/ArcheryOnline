@@ -1,11 +1,10 @@
 import { useState } from "react";
 
-const AddArcher = () => {
+const AddClub = () => {
       const [formData, setFormData] = useState({
             name: "",
-            last_name: "",
-            birth_year: "",
-            gender: "",
+            address: "",
+            phone_number: "",
             email: "",
             password: "",
       });
@@ -25,7 +24,7 @@ const AddArcher = () => {
 
             try {
                   const response = await fetch(
-                        "http://127.0.0.1:5000/archer/add",
+                        "http://127.0.0.1:5000/club/add",
                         {
                               method: "POST",
                               headers: {
@@ -49,7 +48,7 @@ const AddArcher = () => {
 
       return (
             <div>
-                  <h1>Add Archer</h1>
+                  <h1>Add Club</h1>
                   {message && <p style={{ color: "green" }}>{message}</p>}
                   {error && <p style={{ color: "red" }}>{error}</p>}
                   <form onSubmit={handleSubmit}>
@@ -64,38 +63,24 @@ const AddArcher = () => {
                               />
                         </div>
                         <div>
-                              <label>Last Name:</label>
+                              <label>Address:</label>
                               <input
                                     type="text"
-                                    name="last_name"
-                                    value={formData.last_name}
+                                    name="address"
+                                    value={formData.address}
                                     onChange={handleChange}
                                     required
                               />
                         </div>
                         <div>
-                              <label>Birth Year:</label>
+                              <label>Phone Number:</label>
                               <input
-                                    type="number"
-                                    name="birth_year"
-                                    value={formData.birth_year}
+                                    type="text"
+                                    name="phone_number"
+                                    value={formData.phone_number}
                                     onChange={handleChange}
                                     required
                               />
-                        </div>
-                        <div>
-                              <label>Gender:</label>
-                              <select
-                                    name="gender"
-                                    value={formData.gender}
-                                    onChange={handleChange}
-                                    required
-                              >
-                                    <option value="">Select</option>
-                                    <option value="Male">Male</option>
-                                    <option value="Female">Female</option>
-                                    <option value="Other">Other</option>
-                              </select>
                         </div>
                         <div>
                               <label>Email:</label>
@@ -117,10 +102,10 @@ const AddArcher = () => {
                                     required
                               />
                         </div>
-                        <button type="submit">Add Archer</button>
+                        <button type="submit">Add Club</button>
                   </form>
             </div>
       );
 };
 
-export default AddArcher;
+export default AddClub;

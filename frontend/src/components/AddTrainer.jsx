@@ -1,12 +1,12 @@
 import { useState } from "react";
 
-const AddArcher = () => {
+const AddTrainer = () => {
       const [formData, setFormData] = useState({
             name: "",
             last_name: "",
-            birth_year: "",
-            gender: "",
             email: "",
+            phone_number: "",
+            license_number: "",
             password: "",
       });
 
@@ -25,7 +25,7 @@ const AddArcher = () => {
 
             try {
                   const response = await fetch(
-                        "http://127.0.0.1:5000/archer/add",
+                        "http://127.0.0.1:5000/trainer/add",
                         {
                               method: "POST",
                               headers: {
@@ -43,13 +43,13 @@ const AddArcher = () => {
                         setError(errorData.message || "An error occurred");
                   }
             } catch (err) {
-                  setError("Unable to connect to the server");
+                  setError("Unable to connect to the server", err);
             }
       };
 
       return (
             <div>
-                  <h1>Add Archer</h1>
+                  <h1>Add Trainer</h1>
                   {message && <p style={{ color: "green" }}>{message}</p>}
                   {error && <p style={{ color: "red" }}>{error}</p>}
                   <form onSubmit={handleSubmit}>
@@ -74,35 +74,31 @@ const AddArcher = () => {
                               />
                         </div>
                         <div>
-                              <label>Birth Year:</label>
+                              <label>Email:</label>
                               <input
-                                    type="number"
-                                    name="birth_year"
-                                    value={formData.birth_year}
+                                    type="text"
+                                    name="email"
+                                    value={formData.email}
                                     onChange={handleChange}
                                     required
                               />
                         </div>
                         <div>
-                              <label>Gender:</label>
-                              <select
-                                    name="gender"
-                                    value={formData.gender}
+                              <label>Phone number:</label>
+                              <input
+                                    type="text"
+                                    name="phone_number"
+                                    value={formData.phone_number}
                                     onChange={handleChange}
                                     required
-                              >
-                                    <option value="">Select</option>
-                                    <option value="Male">Male</option>
-                                    <option value="Female">Female</option>
-                                    <option value="Other">Other</option>
-                              </select>
+                              />
                         </div>
                         <div>
-                              <label>Email:</label>
+                              <label>License number:</label>
                               <input
-                                    type="email"
-                                    name="email"
-                                    value={formData.email}
+                                    type="text"
+                                    name="license_number"
+                                    value={formData.license_number}
                                     onChange={handleChange}
                                     required
                               />
@@ -117,10 +113,10 @@ const AddArcher = () => {
                                     required
                               />
                         </div>
-                        <button type="submit">Add Archer</button>
+                        <button type="submit">Add Trainer</button>
                   </form>
             </div>
       );
 };
 
-export default AddArcher;
+export default AddTrainer;

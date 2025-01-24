@@ -1,11 +1,14 @@
 import "./App.css";
 import Login from "./components/Login";
-import Home from "./components/Home";
+import ArcherHome from "./components/ArcherHome";
+//import TrainerHome from "./components/TrainerHome";
+import ClubHome from "./components/ClubHome";
 import { useState, useEffect } from "react";
 
 function App() {
       const [isAuthenticated, setIsAuthenticated] = useState(false);
       const [loading, setLoading] = useState(true);
+      const [role, setRole] = useState(null);
 
       useEffect(() => {
             const token = localStorage.getItem("token");
@@ -30,6 +33,7 @@ function App() {
                         .then((data) => {
                               console.log("Protected data:", data);
                               setIsAuthenticated(true);
+                              setRole(data.user.role); // Odczytaj rolę użytkownika z odpowiedzi
                         })
                         .catch((error) => {
                               console.error("Error:", error);
@@ -51,11 +55,17 @@ function App() {
             return <Login />;
       }
 
-      return (
-            <div>
-                  <Home />{" "}
-            </div>
-      );
+      // Renderuj komponent na podstawie roli użytkownika
+      switch (role) {
+            case "Archer":
+                  return <ArcherHome />;
+            // case "Trainer":
+            //  return <TrainerHome />;
+            case "Club Manager":
+                  return <ClubHome />;
+            default:
+                  return <div>Unknown role</div>; // Obsługa przypadku, gdy rola jest nieznana
+      }
 }
 
 export default App;

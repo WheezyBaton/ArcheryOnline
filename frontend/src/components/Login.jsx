@@ -1,6 +1,8 @@
 import { useState } from "react";
-import Home from "./Home";
+import App from "./../App";
 import AddArcher from "./AddArcher";
+import AddClub from "./AddClub";
+import AddTrainer from "./AddTrainer";
 
 export default function Login() {
       const [email, setEmail] = useState("");
@@ -8,6 +10,8 @@ export default function Login() {
       const [token, setToken] = useState(null);
       const [isLoggedIn, setIsLoggedIn] = useState(false);
       const [isSignUp, setIsSignUp] = useState(false);
+      const [isAddClub, setIsAddClub] = useState(false);
+      const [isAddTrainer, setIsAddTrainer] = useState(false);
 
       const handleLogin = async (e) => {
             e.preventDefault();
@@ -36,12 +40,28 @@ export default function Login() {
             setIsSignUp(true);
       };
 
+      const handleAddClubClick = () => {
+            setIsAddClub(true);
+      };
+
+      const handleAddTrainerClick = () => {
+            setIsAddTrainer(true);
+      };
+
       if (isLoggedIn) {
-            return <Home />;
+            return <App />;
       }
 
       if (isSignUp) {
             return <AddArcher />;
+      }
+
+      if (isAddClub) {
+            return <AddClub />;
+      }
+
+      if (isAddTrainer) {
+            return <AddTrainer />;
       }
 
       return (
@@ -62,6 +82,8 @@ export default function Login() {
                         <button type="submit">Login</button>
                   </form>
                   <button onClick={handleSignUpClick}>Załóż Konto</button>
+                  <button onClick={handleAddClubClick}>Dodaj Klub</button>
+                  <button onClick={handleAddTrainerClick}>Dodaj Trenera</button>
             </div>
       );
 }

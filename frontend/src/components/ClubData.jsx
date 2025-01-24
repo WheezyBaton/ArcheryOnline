@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { decodeToken } from "../utils/decodeToken";
 
-const ArcherData = () => {
-      const [archerData, setArcherData] = useState(null);
+const ClubData = () => {
+      const [clubData, setClubData] = useState(null);
       const [loading, setLoading] = useState(true);
       const [error, setError] = useState(null);
 
@@ -24,10 +24,10 @@ const ArcherData = () => {
                   return;
             }
 
-            const fetchArcherData = async () => {
+            const fetchClubData = async () => {
                   try {
                         const response = await fetch(
-                              `http://127.0.0.1:5000/archer/personal_data/${email}`,
+                              `http://127.0.0.1:5000/club/${email}`,
                               {
                                     method: "GET",
                                     headers: {
@@ -38,9 +38,9 @@ const ArcherData = () => {
 
                         if (response.ok) {
                               const data = await response.json();
-                              setArcherData(data);
+                              setClubData(data);
                         } else {
-                              throw new Error("Failed to fetch archer data");
+                              throw new Error("Failed to fetch club data");
                         }
                   } catch (err) {
                         setError(err.message);
@@ -49,7 +49,7 @@ const ArcherData = () => {
                   }
             };
 
-            fetchArcherData();
+            fetchClubData();
       }, []);
 
       if (loading) {
@@ -60,33 +60,23 @@ const ArcherData = () => {
             return <div>Error: {error}</div>;
       }
 
-      if (archerData) {
+      if (clubData) {
             return (
                   <div>
-                        <h1>Archer Personal Data</h1>
+                        <h1>Club Data</h1>
                         <ul>
                               <li>
-                                    <strong>Name:</strong> {archerData.name}{" "}
-                                    {archerData.last_name}
+                                    <strong>Name:</strong> {clubData.name}
                               </li>
                               <li>
-                                    <strong>Email:</strong> {archerData.email}
+                                    <strong>Address:</strong> {clubData.address}
                               </li>
                               <li>
-                                    <strong>Gender:</strong> {archerData.gender}
+                                    <strong>Phone Number:</strong>{" "}
+                                    {clubData.phone_number}
                               </li>
                               <li>
-                                    <strong>Birth Year:</strong>{" "}
-                                    {archerData.birth_year}
-                              </li>
-                              <li>
-                                    <strong>License Number:</strong>{" "}
-                                    {archerData.license_number ||
-                                          "Not available"}
-                              </li>
-                              <li>
-                                    <strong>Club:</strong>{" "}
-                                    {archerData.club || "Not available"}
+                                    <strong>Email:</strong> {clubData.email}
                               </li>
                         </ul>
                   </div>
@@ -96,4 +86,4 @@ const ArcherData = () => {
       return null;
 };
 
-export default ArcherData;
+export default ClubData;

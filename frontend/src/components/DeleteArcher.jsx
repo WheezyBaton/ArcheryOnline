@@ -3,7 +3,6 @@ import { decodeToken } from "./../utils/decodeToken";
 
 export default function DeleteArcher() {
       const [message, setMessage] = useState("");
-      const [isAccountDeleted, setIsAccountDeleted] = useState(false);
 
       useEffect(() => {
             const token = localStorage.getItem("token");
@@ -18,7 +17,7 @@ export default function DeleteArcher() {
 
       const deleteAccount = async (email) => {
             const response = await fetch(
-                  `http://127.0.0.1:5000/archer/delete/${email}`,
+                  `http://127.0.0.1:5000/account/delete/${email}`,
                   {
                         method: "DELETE",
                         headers: {
@@ -31,7 +30,6 @@ export default function DeleteArcher() {
                   const data = await response.json();
                   setMessage(data.message);
                   localStorage.removeItem("token");
-                  setIsAccountDeleted(true);
             } else {
                   setMessage("Failed to delete account. Please try again.");
             }
