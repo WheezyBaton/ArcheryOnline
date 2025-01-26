@@ -58,5 +58,28 @@ def get_trainer(email):
         "last_name": trainer.last_name,
         "email": trainer.email,
         "phone_number": trainer.phone_number,
-        "license_number": trainer.license_number
+        "license_number": trainer.license_number,
+        "club": trainer.club_id,
     }), 200
+
+@app.route('/trainers/<email>/archers', methods=['GET'])
+def get_archers_by_trainer(email):
+    trainer = Trainer.query.filter_by(email=email).first()
+    if not trainer:
+        return jsonify({"error": "Trainer not found"}), 404
+
+    archers = trainer.archers
+    archers_data = [
+        {
+            "id": archer.id,
+            "name": archer.name,
+            "last_name": archer.last_name,
+            "birth_year": archer.birth_year,
+            "gender": archer.gender,
+            "license_number": archer.license_number,
+            "email": archer.email
+        }
+        for archer in archers
+    ]
+
+    return jsonify({"trainer_email": trainer.email, "archers": archers_data}), 200
