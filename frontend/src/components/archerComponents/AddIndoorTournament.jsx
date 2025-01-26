@@ -1,18 +1,15 @@
 import { useState, useEffect } from "react";
-import { decodeToken } from "./../utils/decodeToken";
+import { decodeToken } from "./../../utils/decodeToken";
 import {
       calculateSeriesStats,
-      handleSeriesChange,
       calculateTotalScore,
-} from "./../utils/tournamentUtils";
+      handleSeriesChange,
+} from "../../utils/tournamentUtils";
 
-const AddChildrenOutdoorTournament = () => {
+const AddIndoorTournament = () => {
       const [email, setEmail] = useState("");
-      const [distance, setDistance] = useState(18);
       const [series, setSeries] = useState([
             [0, 0, 0],
-            [0, 0, 0],
-            [0, 0, 9],
             [0, 0, 0],
             [0, 0, 0],
             [0, 0, 0],
@@ -55,22 +52,14 @@ const AddChildrenOutdoorTournament = () => {
                   return;
             }
 
-            if (series.length !== 12 || series.some((s) => s.length !== 3)) {
-                  setMessage(
-                        "For children tournaments, there must be 12 series with 3 shots each"
-                  );
-                  return;
-            }
-
             setLoading(true);
             const tournamentData = {
-                  distance,
                   series,
             };
 
             try {
                   const response = await fetch(
-                        `http://127.0.0.1:5000/archer/tournaments/outdoor/${email}`,
+                        `http://127.0.0.1:5000/archer/tournaments/indoor/${email}`,
                         {
                               method: "POST",
                               headers: {
@@ -99,18 +88,9 @@ const AddChildrenOutdoorTournament = () => {
 
       return (
             <div>
-                  <h2>Add Children Outdoor Tournament</h2>
+                  <h2>Add Indoor Tournament</h2>
                   <form onSubmit={handleAddTournament}>
-                        <label>Distance:</label>
-                        <input
-                              type="number"
-                              value={distance}
-                              onChange={(e) =>
-                                    setDistance(parseInt(e.target.value, 10))
-                              }
-                              required
-                              min="1"
-                        />
+                        <label>Distance: 18m</label>
                         <div>
                               <h3>Series:</h3>
                               {series.map((serie, seriesIndex) => {
@@ -173,4 +153,4 @@ const AddChildrenOutdoorTournament = () => {
       );
 };
 
-export default AddChildrenOutdoorTournament;
+export default AddIndoorTournament;

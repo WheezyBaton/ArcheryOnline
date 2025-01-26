@@ -1,14 +1,17 @@
 import "./App.css";
 import Login from "./components/Login";
-import ArcherHome from "./components/ArcherHome";
-import TrainerHome from "./components/TrainerHome";
-import ClubHome from "./components/ClubHome";
+import ArcherHome from "./components/archerComponents/ArcherHome";
+import TrainerHome from "./components/trainerComponents/TrainerHome";
+import ClubHome from "./components/clubComponents/ClubHome";
 import { useState, useEffect } from "react";
 
 function App() {
       const [isAuthenticated, setIsAuthenticated] = useState(false);
       const [loading, setLoading] = useState(true);
       const [role, setRole] = useState(null);
+      const [user_id, setUser_id] = useState(null);
+      const [email, setEmail] = useState(null);
+      const [birth_date, setBirth_date] = useState(null);
 
       useEffect(() => {
             const token = localStorage.getItem("token");
@@ -34,6 +37,9 @@ function App() {
                               console.log("Protected data:", data);
                               setIsAuthenticated(true);
                               setRole(data.user.role);
+                              setUser_id(data.user.id);
+                              setEmail(data.user.email);
+                              setBirth_date(data.user.birth_date);
                         })
                         .catch((error) => {
                               console.error("Error:", error);

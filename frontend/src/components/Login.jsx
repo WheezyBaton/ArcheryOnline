@@ -1,8 +1,8 @@
 import { useState } from "react";
 import App from "./../App";
-import AddArcher from "./AddArcher";
-import AddClub from "./AddClub";
-import AddTrainer from "./AddTrainer";
+import AddArcher from "./archerComponents/AddArcher";
+import AddClub from "./clubComponents/AddClub";
+import AddTrainer from "./trainerComponents/AddTrainer";
 
 export default function Login() {
       const [email, setEmail] = useState("");

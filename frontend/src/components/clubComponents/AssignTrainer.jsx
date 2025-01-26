@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { decodeToken } from "../utils/decodeToken";
+import { decodeToken } from "./../../utils/decodeToken";
 
-export default function AssignArcher() {
-      const [archerEmail, setArcherEmail] = useState("");
+export default function AssignTrainer() {
+      const [trainerEmail, setTrainerEmail] = useState("");
       const [message, setMessage] = useState(null);
       const [error, setError] = useState(null);
 
@@ -24,12 +24,11 @@ export default function AssignArcher() {
 
             try {
                   const response = await fetch(
-                        `http://127.0.0.1:5000/archer/assign/${archerEmail}/${clubEmail}`,
+                        `http://127.0.0.1:5000/trainer/assign/${trainerEmail}/${clubEmail}`,
                         {
                               method: "POST",
                               headers: {
                                     "Content-Type": "application/json",
-                                    Authorization: `Bearer ${token}`,
                               },
                         }
                   );
@@ -45,22 +44,22 @@ export default function AssignArcher() {
                   }
             } catch (err) {
                   console.error("Error during fetch:", err);
-                  setError("Failed to assign archer. Please try again later.");
+                  setError("Failed to assign trainer. Please try again later.");
             }
       };
 
       return (
             <div>
-                  <h2>Assign Archer to Club</h2>
+                  <h2>Assign Trainer to Club</h2>
 
                   <input
                         type="email"
-                        placeholder="Archer's Email"
-                        value={archerEmail}
-                        onChange={(e) => setArcherEmail(e.target.value)}
+                        placeholder="Trainer's Email"
+                        value={trainerEmail}
+                        onChange={(e) => setTrainerEmail(e.target.value)}
                   />
 
-                  <button onClick={handleAssign}>Assign Archer</button>
+                  <button onClick={handleAssign}>Assign Trainer</button>
 
                   {message && <p style={{ color: "green" }}>{message}</p>}
                   {error && <p style={{ color: "red" }}>{error}</p>}

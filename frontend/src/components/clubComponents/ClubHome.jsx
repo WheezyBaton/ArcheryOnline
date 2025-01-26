@@ -1,14 +1,16 @@
 import { useState } from "react";
 import ClubData from "./ClubData";
 import AssignArcher from "./AssignArcher";
-import Login from "./Login";
+import AssignTrainer from "./AssignTrainer";
+import Login from "../Login";
 import ChangeClub from "./ChangeClub";
-import ArcherList from "./ArcherList";
+import ArcherList from "./../ArcherList";
 
 const ClubHome = () => {
       const [showAssignArcher, setShowAssignArcher] = useState(false);
       const [isLoggedOut, setIsLoggedOut] = useState(false);
       const [showChangeClub, setShowChangeClub] = useState(false);
+      const [showAssignTrainer, setShowAssignTrainer] = useState(false);
 
       const handleLogout = () => {
             localStorage.removeItem("token");
@@ -21,6 +23,10 @@ const ClubHome = () => {
 
       const handleChangeClub = () => {
             setShowChangeClub(true);
+      };
+
+      const toggleAssignTrainer = () => {
+            setShowAssignTrainer(true);
       };
 
       if (isLoggedOut) {
@@ -38,6 +44,10 @@ const ClubHome = () => {
                         {showAssignArcher ? "Hide" : "Show"} Assign Archer
                   </button>
                   {showAssignArcher && <AssignArcher />}
+                  <button onClick={toggleAssignTrainer}>
+                        {showAssignTrainer ? "Hide" : "Show"} Assign Trainer
+                  </button>
+                  {showAssignTrainer && <AssignTrainer />}
             </div>
       );
 };

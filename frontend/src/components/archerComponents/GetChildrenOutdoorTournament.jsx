@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { decodeToken } from "../utils/decodeToken";
+import { decodeToken } from "./../../utils/decodeToken";
 
 const GetYouthOutdoorTournament = () => {
       const [tournaments, setTournaments] = useState([]);

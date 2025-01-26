@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
-import { decodeToken } from "../utils/decodeToken";
+import { decodeToken } from "./../../utils/decodeToken";
 
-const TrainerData = () => {
-      const [trainerData, setTrainerData] = useState(null);
+const ClubData = () => {
+      const [clubData, setClubData] = useState(null);
       const [loading, setLoading] = useState(true);
       const [error, setError] = useState(null);
 
@@ -24,10 +24,10 @@ const TrainerData = () => {
                   return;
             }
 
-            const fetchTrainerData = async () => {
+            const fetchClubData = async () => {
                   try {
                         const response = await fetch(
-                              `http://127.0.0.1:5000/trainer/personal_data/${email}`,
+                              `http://127.0.0.1:5000/club/${email}`,
                               {
                                     method: "GET",
                                     headers: {
@@ -38,9 +38,9 @@ const TrainerData = () => {
 
                         if (response.ok) {
                               const data = await response.json();
-                              setTrainerData(data);
+                              setClubData(data);
                         } else {
-                              throw new Error("Failed to fetch trainer data");
+                              throw new Error("Failed to fetch club data");
                         }
                   } catch (err) {
                         setError(err.message);
@@ -49,7 +49,7 @@ const TrainerData = () => {
                   }
             };
 
-            fetchTrainerData();
+            fetchClubData();
       }, []);
 
       if (loading) {
@@ -60,30 +60,23 @@ const TrainerData = () => {
             return <div>Error: {error}</div>;
       }
 
-      if (trainerData) {
+      if (clubData) {
             return (
                   <div>
-                        <h1> Personal Data</h1>
+                        <h1>Club Data</h1>
                         <ul>
                               <li>
-                                    <strong>Name:</strong> {trainerData.name}{" "}
-                                    {trainerData.last_name}
+                                    <strong>Name:</strong> {clubData.name}
                               </li>
                               <li>
-                                    <strong>Email:</strong> {trainerData.email}
+                                    <strong>Address:</strong> {clubData.address}
                               </li>
                               <li>
-                                    <strong>Birth Year:</strong>{" "}
-                                    {trainerData.birth_year}
+                                    <strong>Phone Number:</strong>{" "}
+                                    {clubData.phone_number}
                               </li>
                               <li>
-                                    <strong>License Number:</strong>{" "}
-                                    {trainerData.license_number ||
-                                          "Not available"}
-                              </li>
-                              <li>
-                                    <strong>Club:</strong>{" "}
-                                    {trainerData.club || "Not available"}
+                                    <strong>Email:</strong> {clubData.email}
                               </li>
                         </ul>
                   </div>
@@ -93,4 +86,4 @@ const TrainerData = () => {
       return null;
 };
 
-export default TrainerData;
+export default ClubData;

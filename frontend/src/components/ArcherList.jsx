@@ -11,20 +11,21 @@ const ArcherList = () => {
 
             if (token) {
                   const decoded = decodeToken(token);
-                  const clubEmail = decoded.email;
+                  const userEmail = decoded.email;
+                  const userRole = decoded.role;
 
-                  fetchArchers(clubEmail);
+                  fetchArchers(userEmail, userRole);
             } else {
                   setMessage("No token found. Please log in.");
             }
       }, []);
 
-      const fetchArchers = async (clubEmail) => {
+      const fetchArchers = async (clubEmail, userRole) => {
             setLoading(true);
 
             try {
                   const response = await fetch(
-                        `http://127.0.0.1:5000/club/archers/${clubEmail}`,
+                        `http://127.0.0.1:5000/${userRole}/archers/${clubEmail}`,
                         {
                               method: "GET",
                               headers: {
@@ -41,7 +42,10 @@ const ArcherList = () => {
                         setMessage(data.message || "Failed to fetch archers.");
                   }
             } catch (error) {
-                  setMessage("An error occurred while fetching archers.");
+                  setMessage(
+                        "An error occurred while fetching archers.",
+                        error
+                  );
             } finally {
                   setLoading(false);
             }

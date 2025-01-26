@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { decodeToken } from "./../utils/decodeToken";
+import { decodeToken } from "./../../utils/decodeToken";
 import AddChildrenOutdoorTournament from "./AddChildrenOutdoorTournament";
 import AddAdultOutdoorTournament from "./AddAdultOutdoorTournament";
 import AddIndoorTournament from "./AddIndoorTournament";

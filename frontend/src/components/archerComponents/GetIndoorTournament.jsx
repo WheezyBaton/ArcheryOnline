@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { decodeToken } from "../utils/decodeToken";
+import { decodeToken } from "./../../utils/decodeToken";
 
 const GetIndoorTournament = () => {
       const [tournaments, setTournaments] = useState([]);

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { decodeToken } from "../utils/decodeToken";
+import { decodeToken } from "./../../utils/decodeToken";
 
 const AddTraining = () => {
       const [quantityOfShots, setQuantityOfShots] = useState("");

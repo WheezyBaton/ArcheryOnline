@@ -1,7 +1,8 @@
 import { useState } from "react";
 import TrainerData from "./TrainerData";
 import ChangeTrainer from "./ChangeTrainer";
-import Login from "./Login";
+import Login from "../Login";
+import ArcherList from "../ArcherList";
 
 const TrainerHome = () => {
       const [isLoggedOut, setIsLoggedOut] = useState(false);
@@ -23,6 +24,7 @@ const TrainerHome = () => {
       return (
             <div>
                   <TrainerData />
+                  <ArcherList />
                   <button onClick={handleLogout}>Wyloguj</button>
                   <button onClick={handleChangeTrainer}>Zmień Dane</button>
                   {showChangeTrainer && <ChangeTrainer />}

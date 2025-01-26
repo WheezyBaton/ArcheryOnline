@@ -1,6 +1,6 @@
 import { useState } from "react";
 import ArcherData from "./ArcherData";
-import Login from "./Login";
+import Login from "../Login";
 import DeleteArcher from "./DeleteArcher";
 import AddTournament from "./AddTournament";
 import ChangeArcher from "./ChangeArcher";

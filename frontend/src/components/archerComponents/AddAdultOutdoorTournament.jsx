@@ -1,24 +1,21 @@
 import { useState, useEffect } from "react";
-import { decodeToken } from "./../utils/decodeToken";
+import { decodeToken } from "./../../utils/decodeToken";
 import {
       calculateSeriesStats,
-      calculateTotalScore,
       handleSeriesChange,
-} from "./../utils/tournamentUtils";
+      calculateTotalScore,
+} from "./../../utils/tournamentUtils";
 
-const AddIndoorTournament = () => {
+const AddAdultOutdoorTournament = () => {
       const [email, setEmail] = useState("");
+      const [distance, setDistance] = useState(18);
       const [series, setSeries] = useState([
-            [0, 0, 0],
-            [0, 0, 0],
-            [0, 0, 0],
-            [0, 0, 0],
-            [0, 0, 0],
-            [0, 0, 0],
-            [0, 0, 0],
-            [0, 0, 0],
-            [0, 0, 0],
-            [0, 0, 0],
+            [0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0],
       ]);
       const [message, setMessage] = useState("");
       const [loading, setLoading] = useState(false);
@@ -54,12 +51,13 @@ const AddIndoorTournament = () => {
 
             setLoading(true);
             const tournamentData = {
+                  distance,
                   series,
             };
 
             try {
                   const response = await fetch(
-                        `http://127.0.0.1:5000/archer/tournaments/indoor/${email}`,
+                        `http://127.0.0.1:5000/archer/tournaments/outdoor/${email}`,
                         {
                               method: "POST",
                               headers: {
@@ -88,9 +86,18 @@ const AddIndoorTournament = () => {
 
       return (
             <div>
-                  <h2>Add Indoor Tournament</h2>
+                  <h2>Add Outdoor Tournament</h2>
                   <form onSubmit={handleAddTournament}>
-                        <label>Distance: 18m</label>
+                        <label>Distance:</label>
+                        <input
+                              type="number"
+                              value={distance}
+                              onChange={(e) =>
+                                    setDistance(parseInt(e.target.value, 10))
+                              }
+                              required
+                              min="1"
+                        />
                         <div>
                               <h3>Series:</h3>
                               {series.map((serie, seriesIndex) => {
@@ -153,4 +160,4 @@ const AddIndoorTournament = () => {
       );
 };
 
-export default AddIndoorTournament;
+export default AddAdultOutdoorTournament;

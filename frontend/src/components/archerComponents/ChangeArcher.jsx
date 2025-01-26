@@ -1,12 +1,13 @@
 import { useState, useEffect } from "react";
-import { decodeToken } from "./../utils/decodeToken";
+import { decodeToken } from "./../../utils/decodeToken";
 
-const ChangeClub = () => {
+const ChangeArcher = () => {
       const [email, setEmail] = useState("");
       const [formData, setFormData] = useState({
             name: "",
-            address: "",
-            phone_number: "",
+            last_name: "",
+            birth_year: "",
+            gender: "",
             new_email: "",
       });
       const [placeholders, setPlaceholders] = useState({});
@@ -20,26 +21,30 @@ const ChangeClub = () => {
                   const userEmail = decoded.email;
                   setEmail(userEmail);
 
-                  fetch(`http://127.0.0.1:5000/club/${userEmail}`, {
-                        method: "GET",
-                        headers: {
-                              "Content-Type": "application/json",
-                        },
-                  })
+                  fetch(
+                        `http://127.0.0.1:5000/archer/personal_data/${userEmail}`,
+                        {
+                              method: "GET",
+                              headers: {
+                                    "Content-Type": "application/json",
+                              },
+                        }
+                  )
                         .then((response) => response.json())
                         .then((data) => {
                               if (data) {
                                     setPlaceholders(data);
                                     setFormData({
                                           name: data.name || "",
-                                          address: data.address || "",
-                                          phone_number: data.phone_number || "",
+                                          last_name: data.last_name || "",
+                                          birth_year: data.birth_year || "",
+                                          gender: data.gender || "",
                                           new_email: data.email || "",
                                     });
                               }
                         })
                         .catch(() => {
-                              setMessage("Failed to fetch club data.");
+                              setMessage("Failed to fetch user data.");
                         });
             } else {
                   setMessage("No token found. Please log in.");
@@ -57,7 +62,7 @@ const ChangeClub = () => {
             setLoading(true);
             try {
                   const response = await fetch(
-                        `http://127.0.0.1:5000/club/change/${email}`,
+                        `http://127.0.0.1:5000/archer/change/${email}`,
                         {
                               method: "PUT",
                               headers: {
@@ -78,7 +83,7 @@ const ChangeClub = () => {
                         setMessage(data.message || "An error occurred.");
                   }
             } catch (error) {
-                  setMessage("Failed to update club data.");
+                  setMessage("Failed to update user data.", error);
             } finally {
                   setLoading(false);
             }
@@ -86,7 +91,7 @@ const ChangeClub = () => {
 
       return (
             <div>
-                  <h2>Change Club Data</h2>
+                  <h2>Change Archer Data</h2>
                   <form onSubmit={handleSubmit}>
                         <label>
                               Name:
@@ -96,33 +101,47 @@ const ChangeClub = () => {
                                     value={formData.name}
                                     onChange={handleInputChange}
                                     placeholder={
-                                          placeholders.name || "Enter club name"
+                                          placeholders.name || "Enter name"
                                     }
                               />
                         </label>
                         <label>
-                              Address:
+                              Last Name:
                               <input
                                     type="text"
-                                    name="address"
-                                    value={formData.address}
+                                    name="last_name"
+                                    value={formData.last_name}
                                     onChange={handleInputChange}
                                     placeholder={
-                                          placeholders.address ||
-                                          "Enter address"
+                                          placeholders.last_name ||
+                                          "Enter last name"
                                     }
                               />
                         </label>
                         <label>
-                              Phone Number:
+                              Birth Year:
                               <input
-                                    type="text"
-                                    name="phone_number"
-                                    value={formData.phone_number}
+                                    type="number"
+                                    name="birth_year"
+                                    value={formData.birth_year}
                                     onChange={handleInputChange}
                                     placeholder={
-                                          placeholders.phone_number ||
-                                          "Enter phone number"
+                                          placeholders.birth_year ||
+                                          "Enter birth year"
+                                    }
+                                    min="1900"
+                                    max="2100"
+                              />
+                        </label>
+                        <label>
+                              Gender:
+                              <input
+                                    type="text"
+                                    name="gender"
+                                    value={formData.gender}
+                                    onChange={handleInputChange}
+                                    placeholder={
+                                          placeholders.gender || "Enter gender"
                                     }
                               />
                         </label>
@@ -148,4 +167,4 @@ const ChangeClub = () => {
       );
 };
 
-export default ChangeClub;
+export default ChangeArcher;

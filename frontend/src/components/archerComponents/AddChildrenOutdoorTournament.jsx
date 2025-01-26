@@ -1,21 +1,27 @@
 import { useState, useEffect } from "react";
-import { decodeToken } from "./../utils/decodeToken";
+import { decodeToken } from "./../../utils/decodeToken";
 import {
       calculateSeriesStats,
       handleSeriesChange,
       calculateTotalScore,
-} from "./../utils/tournamentUtils";
+} from "./../../utils/tournamentUtils";
 
-const AddAdultOutdoorTournament = () => {
+const AddChildrenOutdoorTournament = () => {
       const [email, setEmail] = useState("");
       const [distance, setDistance] = useState(18);
       const [series, setSeries] = useState([
-            [0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0],
+            [0, 0, 0],
+            [0, 0, 0],
+            [0, 0, 9],
+            [0, 0, 0],
+            [0, 0, 0],
+            [0, 0, 0],
+            [0, 0, 0],
+            [0, 0, 0],
+            [0, 0, 0],
+            [0, 0, 0],
+            [0, 0, 0],
+            [0, 0, 0],
       ]);
       const [message, setMessage] = useState("");
       const [loading, setLoading] = useState(false);
@@ -46,6 +52,13 @@ const AddAdultOutdoorTournament = () => {
 
             if (!email) {
                   setMessage("Email is required");
+                  return;
+            }
+
+            if (series.length !== 12 || series.some((s) => s.length !== 3)) {
+                  setMessage(
+                        "For children tournaments, there must be 12 series with 3 shots each"
+                  );
                   return;
             }
 
@@ -86,7 +99,7 @@ const AddAdultOutdoorTournament = () => {
 
       return (
             <div>
-                  <h2>Add Outdoor Tournament</h2>
+                  <h2>Add Children Outdoor Tournament</h2>
                   <form onSubmit={handleAddTournament}>
                         <label>Distance:</label>
                         <input
@@ -160,4 +173,4 @@ const AddAdultOutdoorTournament = () => {
       );
 };
 
-export default AddAdultOutdoorTournament;
+export default AddChildrenOutdoorTournament;
