@@ -59,5 +59,5 @@ def get_archer(email):
         "email": account.email,
         "license_number": account.license_number,
         "club": account.club_id,
-
+        "trainer": account.trainer_id
     }), 200

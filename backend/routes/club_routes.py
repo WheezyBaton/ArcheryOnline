@@ -175,3 +175,51 @@ def delete_archer_from_club(email):
         return jsonify({"message": "Account deleted from club"}), 200
     else:
         return jsonify({"message": "Account not found in club"}), 404
+
+@app.route('/assign/<club_email>/<archer_email>/<trainer_email>', methods=['POST'])
+def assign_archer_to_trainer(club_email, archer_email, trainer_email):
+    club = Club.query.filter_by(email=club_email).first()
+    if not club:
+        return jsonify({"error": "Club not found"}), 404
+
+    archer = Archer.query.filter_by(email=archer_email, club_id=club.id).first()
+    if not archer:
+        return jsonify({"error": "Archer not found in this club"}), 404
+
+    trainer = Trainer.query.filter_by(email=trainer_email, club_id=club.id).first()
+    if not trainer:
+        return jsonify({"error": "Trainer not found in this club"}), 404
+
+    archer.trainer_id = trainer.id
+    db.session.commit()
+
+    return jsonify({
+        "message": f"Archer '{archer.name} {archer.last_name}' has been assigned to Trainer '{trainer.name} {trainer.last_name}'"
+    }), 200
+
+
+@app.route('/discharge/<club_email>/<archer_email>/<trainer_email>', methods=['POST'])
+def discharge_archer_from_trainer(club_email, archer_email, trainer_email):
+    club = Club.query.filter_by(email=club_email).first()
+    if not club:
+        return jsonify({"error": "Club not found"}), 404
+
+    archer = Archer.query.filter_by(email=archer_email, club_id=club.id).first()
+    if not archer:
+        return jsonify({"error": "Archer not found in this club"}), 404
+
+    trainer = Trainer.query.filter_by(email=trainer_email, club_id=club.id).first()
+    if not trainer:
+        return jsonify({"error": "Trainer not found in this club"}), 404
+
+    if archer.trainer_id != trainer.id:
+        return jsonify({
+            "error": f"Archer '{archer.name} {archer.last_name}' is not assigned to Trainer '{trainer.name} {trainer.last_name}'"
+        }), 400
+
+    archer.trainer_id = None
+    db.session.commit()
+
+    return jsonify({
+        "message": f"Archer '{archer.name} {archer.last_name}' has been discharge from Trainer '{trainer.name} {trainer.last_name}'"
+    }), 200
