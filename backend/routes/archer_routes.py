@@ -1,9 +1,6 @@
 from flask import jsonify, request
 from backend import app, db
-from datetime import datetime
 from backend.models.archer import Archer
-from backend.models.trainings import Training
-from backend.models.tournaments import Tournament
 
 @app.route("/archer/add", methods=['POST'])
 def create_archer():
