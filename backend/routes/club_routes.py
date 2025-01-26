@@ -58,7 +58,7 @@ def get_club(email):
         "email": club.email
     }), 200
 
-@app.route("/club/archers/<email>", methods=['GET'])
+@app.route("/Club Manager/archers/<email>", methods=['GET'])
 def get_archers_from_club(email):
     club = Club.query.filter_by(email=email).first()
 

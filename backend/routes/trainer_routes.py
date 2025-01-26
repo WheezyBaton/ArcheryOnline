@@ -1,6 +1,7 @@
 from flask import jsonify, request
 from backend import app, db
 from backend.models.trainer import Trainer
+from backend.models.archer import Archer
 
 @app.route("/trainer/add", methods=['POST'])
 def create_trainer():
@@ -83,3 +84,23 @@ def get_archers_by_trainer(email):
     ]
 
     return jsonify({"trainer_email": trainer.email, "archers": archers_data}), 200
+
+@app.route("/Trainer/archers/<email>", methods=['GET'])
+def get_archers_from_trainer(email):
+    trainer = Trainer.query.filter_by(email=email).first()
+
+    if trainer is None:
+        return jsonify({"message": "Club not found"}), 404
+    
+    archers = Archer.query.filter_by(trainer_id=trainer.id).all()
+
+    archers_data = []
+    for archer in archers:
+        archers_data.append({
+            "name": archer.name,
+            "last_name": archer.last_name,
+            "email": archer.email,
+            "license_number": archer.license_number
+        })
+    
+    return jsonify({"archers": archers_data}), 200
