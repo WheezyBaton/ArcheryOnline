@@ -1,27 +1,11 @@
 import { useState } from "react";
-import { decodeToken } from "./../../utils/decodeToken";
 
-export default function AssignTrainer() {
+export default function AssignTrainer({ clubEmail }) {
       const [trainerEmail, setTrainerEmail] = useState("");
       const [message, setMessage] = useState(null);
       const [error, setError] = useState(null);
 
       const handleAssign = async () => {
-            const token = localStorage.getItem("token");
-
-            if (!token) {
-                  setError("Token not found. Please log in.");
-                  return;
-            }
-
-            const decodedToken = decodeToken(token);
-            const clubEmail = decodedToken.email;
-
-            if (!clubEmail) {
-                  setError("Email not found in token.");
-                  return;
-            }
-
             try {
                   const response = await fetch(
                         `http://127.0.0.1:5000/trainer/assign/${trainerEmail}/${clubEmail}`,

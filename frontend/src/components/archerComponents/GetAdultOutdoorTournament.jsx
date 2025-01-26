@@ -1,34 +1,22 @@
 import { useState, useEffect } from "react";
-import { decodeToken } from "./../../utils/decodeToken";
 
-const GetAdultOutdoorTournament = () => {
+const GetAdultOutdoorTournament = ({ email }) => {
       const [tournaments, setTournaments] = useState([]);
       const [showDetails, setShowDetails] = useState(null);
 
       useEffect(() => {
-            const token = localStorage.getItem("token");
-            if (token) {
-                  const decoded = decodeToken(token);
-                  const email = decoded.email;
-
-                  fetch(`http://127.0.0.1:5000/archer/tournaments/${email}`)
-                        .then((response) => response.json())
-                        .then((data) => {
-                              const adultTournaments = data.tournaments.filter(
-                                    (tournament) =>
-                                          tournament.type === "outdoor_adult"
-                              );
-                              setTournaments(adultTournaments);
-                        })
-                        .catch((error) =>
-                              console.error(
-                                    "Error fetching tournaments:",
-                                    error
-                              )
+            fetch(`http://127.0.0.1:5000/archer/tournaments/${email}`)
+                  .then((response) => response.json())
+                  .then((data) => {
+                        const adultTournaments = data.tournaments.filter(
+                              (tournament) =>
+                                    tournament.type === "outdoor_adult"
                         );
-            } else {
-                  console.log("No token found.");
-            }
+                        setTournaments(adultTournaments);
+                  })
+                  .catch((error) =>
+                        console.error("Error fetching tournaments:", error)
+                  );
       }, []);
 
       const handleToggleDetails = (index) => {

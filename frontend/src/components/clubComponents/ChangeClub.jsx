@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
-import { decodeToken } from "./../../utils/decodeToken";
 
-const ChangeClub = () => {
-      const [email, setEmail] = useState("");
+const ChangeClub = ({ email }) => {
       const [formData, setFormData] = useState({
             name: "",
             address: "",
@@ -14,36 +12,27 @@ const ChangeClub = () => {
       const [loading, setLoading] = useState(false);
 
       useEffect(() => {
-            const token = localStorage.getItem("token");
-            if (token) {
-                  const decoded = decodeToken(token);
-                  const userEmail = decoded.email;
-                  setEmail(userEmail);
-
-                  fetch(`http://127.0.0.1:5000/club/${userEmail}`, {
-                        method: "GET",
-                        headers: {
-                              "Content-Type": "application/json",
-                        },
+            fetch(`http://127.0.0.1:5000/club/${userEmail}`, {
+                  method: "GET",
+                  headers: {
+                        "Content-Type": "application/json",
+                  },
+            })
+                  .then((response) => response.json())
+                  .then((data) => {
+                        if (data) {
+                              setPlaceholders(data);
+                              setFormData({
+                                    name: data.name || "",
+                                    address: data.address || "",
+                                    phone_number: data.phone_number || "",
+                                    new_email: data.email || "",
+                              });
+                        }
                   })
-                        .then((response) => response.json())
-                        .then((data) => {
-                              if (data) {
-                                    setPlaceholders(data);
-                                    setFormData({
-                                          name: data.name || "",
-                                          address: data.address || "",
-                                          phone_number: data.phone_number || "",
-                                          new_email: data.email || "",
-                                    });
-                              }
-                        })
-                        .catch(() => {
-                              setMessage("Failed to fetch club data.");
-                        });
-            } else {
-                  setMessage("No token found. Please log in.");
-            }
+                  .catch(() => {
+                        setMessage("Failed to fetch club data.");
+                  });
       }, []);
 
       const handleInputChange = (e) => {

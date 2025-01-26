@@ -1,19 +1,7 @@
-import { useState, useEffect } from "react";
-import { decodeToken } from "./../../utils/decodeToken";
+import { useState } from "react";
 
-export default function DeleteArcher() {
+const DeleteArcher = ({ email }) => {
       const [message, setMessage] = useState("");
-
-      useEffect(() => {
-            const token = localStorage.getItem("token");
-            if (token) {
-                  const decoded = decodeToken(token);
-                  const email = decoded.email;
-                  deleteAccount(email);
-            } else {
-                  setMessage("No token found. Please log in.");
-            }
-      }, []);
 
       const deleteAccount = async (email) => {
             const response = await fetch(
@@ -35,10 +23,14 @@ export default function DeleteArcher() {
             }
       };
 
+      deleteAccount(email);
+
       return (
             <div>
                   <h2>Delete Account</h2>
                   {message && <p>{message}</p>}
             </div>
       );
-}
+};
+
+export default DeleteArcher;

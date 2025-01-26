@@ -1,33 +1,23 @@
 import { useState, useEffect } from "react";
-import { decodeToken } from "./../../utils/decodeToken";
 
-const GetTraining = () => {
+const GetTraining = ({ email }) => {
       const [trainings, setTrainings] = useState([]);
       const [error, setError] = useState(null);
 
       useEffect(() => {
-            const token = localStorage.getItem("token");
-
-            if (token) {
-                  const decoded = decodeToken(token);
-                  const email = decoded.email;
-
-                  fetch(`http://127.0.0.1:5000/archer/trainings/${email}`)
-                        .then((response) => {
-                              if (response.ok) {
-                                    return response.json();
-                              }
-                              throw new Error("Nie znaleziono treningów.");
-                        })
-                        .then((data) => {
-                              setTrainings(data.trainings);
-                        })
-                        .catch((error) => {
-                              setError(error.message);
-                        });
-            } else {
-                  setError("Brak tokena. Zaloguj się ponownie.");
-            }
+            fetch(`http://127.0.0.1:5000/archer/trainings/${email}`)
+                  .then((response) => {
+                        if (response.ok) {
+                              return response.json();
+                        }
+                        throw new Error("Nie znaleziono treningów.");
+                  })
+                  .then((data) => {
+                        setTrainings(data.trainings);
+                  })
+                  .catch((error) => {
+                        setError(error.message);
+                  });
       }, []);
 
       return (

@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
-import { decodeToken } from "./../../utils/decodeToken";
 
-const ChangeArcher = () => {
-      const [email, setEmail] = useState("");
+const ChangeArcher = ({ email }) => {
       const [formData, setFormData] = useState({
             name: "",
             last_name: "",
@@ -15,40 +13,28 @@ const ChangeArcher = () => {
       const [loading, setLoading] = useState(false);
 
       useEffect(() => {
-            const token = localStorage.getItem("token");
-            if (token) {
-                  const decoded = decodeToken(token);
-                  const userEmail = decoded.email;
-                  setEmail(userEmail);
-
-                  fetch(
-                        `http://127.0.0.1:5000/archer/personal_data/${userEmail}`,
-                        {
-                              method: "GET",
-                              headers: {
-                                    "Content-Type": "application/json",
-                              },
+            fetch(`http://127.0.0.1:5000/archer/personal_data/${email}`, {
+                  method: "GET",
+                  headers: {
+                        "Content-Type": "application/json",
+                  },
+            })
+                  .then((response) => response.json())
+                  .then((data) => {
+                        if (data) {
+                              setPlaceholders(data);
+                              setFormData({
+                                    name: data.name || "",
+                                    last_name: data.last_name || "",
+                                    birth_year: data.birth_year || "",
+                                    gender: data.gender || "",
+                                    new_email: data.email || "",
+                              });
                         }
-                  )
-                        .then((response) => response.json())
-                        .then((data) => {
-                              if (data) {
-                                    setPlaceholders(data);
-                                    setFormData({
-                                          name: data.name || "",
-                                          last_name: data.last_name || "",
-                                          birth_year: data.birth_year || "",
-                                          gender: data.gender || "",
-                                          new_email: data.email || "",
-                                    });
-                              }
-                        })
-                        .catch(() => {
-                              setMessage("Failed to fetch user data.");
-                        });
-            } else {
-                  setMessage("No token found. Please log in.");
-            }
+                  })
+                  .catch(() => {
+                        setMessage("Failed to fetch user data.");
+                  });
       }, []);
 
       const handleInputChange = (e) => {

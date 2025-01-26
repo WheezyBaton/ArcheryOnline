@@ -6,7 +6,7 @@ import Login from "../Login";
 import ChangeClub from "./ChangeClub";
 import ArcherList from "./../ArcherList";
 
-const ClubHome = () => {
+const ClubHome = ({ email, role }) => {
       const [showAssignArcher, setShowAssignArcher] = useState(false);
       const [isLoggedOut, setIsLoggedOut] = useState(false);
       const [showChangeClub, setShowChangeClub] = useState(false);
@@ -35,19 +35,19 @@ const ClubHome = () => {
 
       return (
             <div>
-                  <ClubData />
-                  <ArcherList />
+                  <ClubData email={email} />
+                  <ArcherList email={email} role={role} />
                   <button onClick={handleChangeClub}>Zmień Dane</button>
-                  {showChangeClub && <ChangeClub />}
+                  {showChangeClub && <ChangeClub email={email} />}
                   <button onClick={handleLogout}>Wyloguj</button>
                   <button onClick={toggleAssignArcher}>
                         {showAssignArcher ? "Hide" : "Show"} Assign Archer
                   </button>
-                  {showAssignArcher && <AssignArcher />}
+                  {showAssignArcher && <AssignArcher clubEmail={email} />}
                   <button onClick={toggleAssignTrainer}>
                         {showAssignTrainer ? "Hide" : "Show"} Assign Trainer
                   </button>
-                  {showAssignTrainer && <AssignTrainer />}
+                  {showAssignTrainer && <AssignTrainer clubEmail={email} />}
             </div>
       );
 };

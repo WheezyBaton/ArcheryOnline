@@ -2,12 +2,12 @@ import GetIndoorTournament from "./GetIndoorTournament";
 import GetAdultOutdoorTournament from "./GetAdultOutdoorTournament";
 import GetChildrenOutdoorTournament from "./GetChildrenOutdoorTournament";
 
-const GetTournament = () => {
+const GetTournament = ({ email }) => {
       return (
             <div>
-                  <GetIndoorTournament />
-                  <GetAdultOutdoorTournament />
-                  <GetChildrenOutdoorTournament />
+                  <GetIndoorTournament email={email} />
+                  <GetAdultOutdoorTournament email={email} />
+                  <GetChildrenOutdoorTournament email={email} />
             </div>
       );
 };

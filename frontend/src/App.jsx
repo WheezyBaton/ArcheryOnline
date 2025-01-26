@@ -63,11 +63,11 @@ function App() {
 
       switch (role) {
             case "Archer":
-                  return <ArcherHome />;
+                  return <ArcherHome email={email} />;
             case "Trainer":
-                  return <TrainerHome />;
+                  return <TrainerHome email={email} role={role} />;
             case "Club Manager":
-                  return <ClubHome />;
+                  return <ClubHome email={email} role={role} />;
             default:
                   return <div>Unknown role</div>;
       }

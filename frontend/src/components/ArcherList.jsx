@@ -1,31 +1,16 @@
 import { useState, useEffect } from "react";
-import { decodeToken } from "./../utils/decodeToken";
 
-const ArcherList = () => {
+const ArcherList = ({ email, role }) => {
       const [archers, setArchers] = useState([]);
       const [message, setMessage] = useState("");
       const [loading, setLoading] = useState(false);
 
-      useEffect(() => {
-            const token = localStorage.getItem("token");
-
-            if (token) {
-                  const decoded = decodeToken(token);
-                  const userEmail = decoded.email;
-                  const userRole = decoded.role;
-
-                  fetchArchers(userEmail, userRole);
-            } else {
-                  setMessage("No token found. Please log in.");
-            }
-      }, []);
-
-      const fetchArchers = async (clubEmail, userRole) => {
+      const fetchArchers = async (email, role) => {
             setLoading(true);
 
             try {
                   const response = await fetch(
-                        `http://127.0.0.1:5000/${userRole}/archers/${clubEmail}`,
+                        `http://127.0.0.1:5000/${role}/archers/${email}`,
                         {
                               method: "GET",
                               headers: {
@@ -50,6 +35,10 @@ const ArcherList = () => {
                   setLoading(false);
             }
       };
+
+      useEffect(() => {
+            fetchArchers(email, role);
+      }, [email, role]);
 
       return (
             <div>

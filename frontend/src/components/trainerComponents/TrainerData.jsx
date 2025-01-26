@@ -1,29 +1,11 @@
 import { useState, useEffect } from "react";
-import { decodeToken } from "./../../utils/decodeToken";
 
-const TrainerData = () => {
+const TrainerData = ({ email }) => {
       const [trainerData, setTrainerData] = useState(null);
       const [loading, setLoading] = useState(true);
       const [error, setError] = useState(null);
 
       useEffect(() => {
-            const token = localStorage.getItem("token");
-
-            if (!token) {
-                  setError("Token not found. Please log in.");
-                  setLoading(false);
-                  return;
-            }
-
-            const decodedToken = decodeToken(token);
-            const email = decodedToken.email;
-
-            if (!email) {
-                  setError("Email not found in token.");
-                  setLoading(false);
-                  return;
-            }
-
             const fetchTrainerData = async () => {
                   try {
                         const response = await fetch(

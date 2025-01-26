@@ -1,13 +1,11 @@
-import { useState, useEffect } from "react";
-import { decodeToken } from "./../../utils/decodeToken";
+import { useState } from "react";
 import {
       calculateSeriesStats,
       handleSeriesChange,
       calculateTotalScore,
 } from "./../../utils/tournamentUtils";
 
-const AddChildrenOutdoorTournament = () => {
-      const [email, setEmail] = useState("");
+const AddChildrenOutdoorTournament = ({ email }) => {
       const [distance, setDistance] = useState(18);
       const [series, setSeries] = useState([
             [0, 0, 0],
@@ -26,17 +24,6 @@ const AddChildrenOutdoorTournament = () => {
       const [message, setMessage] = useState("");
       const [loading, setLoading] = useState(false);
 
-      useEffect(() => {
-            const token = localStorage.getItem("token");
-            if (token) {
-                  const decoded = decodeToken(token);
-                  const email = decoded.email;
-                  setEmail(email);
-            } else {
-                  setMessage("No token found. Please log in.");
-            }
-      }, []);
-
       const onSeriesChange = (e, seriesIndex, shotIndex) => {
             const updatedSeries = handleSeriesChange(
                   series,
@@ -49,11 +36,6 @@ const AddChildrenOutdoorTournament = () => {
 
       const handleAddTournament = async (e) => {
             e.preventDefault();
-
-            if (!email) {
-                  setMessage("Email is required");
-                  return;
-            }
 
             if (series.length !== 12 || series.some((s) => s.length !== 3)) {
                   setMessage(

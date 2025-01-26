@@ -1,25 +1,13 @@
 import { useState, useEffect } from "react";
-import { decodeToken } from "./../../utils/decodeToken";
 
-const ArcherData = () => {
+const ArcherData = ({ email }) => {
       const [archerData, setArcherData] = useState(null);
       const [loading, setLoading] = useState(true);
       const [error, setError] = useState(null);
 
       useEffect(() => {
-            const token = localStorage.getItem("token");
-
-            if (!token) {
-                  setError("Token not found. Please log in.");
-                  setLoading(false);
-                  return;
-            }
-
-            const decodedToken = decodeToken(token);
-            const email = decodedToken.email;
-
             if (!email) {
-                  setError("Email not found in token.");
+                  setError("Email is required.");
                   setLoading(false);
                   return;
             }
@@ -50,7 +38,7 @@ const ArcherData = () => {
             };
 
             fetchArcherData();
-      }, []);
+      }, [email]); // Zmieniamy zależność na email
 
       if (loading) {
             return <div>Loading...</div>;

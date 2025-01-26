@@ -1,8 +1,6 @@
 import { useState, useEffect } from "react";
-import { decodeToken } from "./../../utils/decodeToken";
 
-const ChangeTrainer = () => {
-      const [email, setEmail] = useState("");
+const ChangeTrainer = ({ email }) => {
       const [formData, setFormData] = useState({
             name: "",
             last_name: "",
@@ -15,41 +13,28 @@ const ChangeTrainer = () => {
       const [loading, setLoading] = useState(false);
 
       useEffect(() => {
-            const token = localStorage.getItem("token");
-            if (token) {
-                  const decoded = decodeToken(token);
-                  const userEmail = decoded.email;
-                  setEmail(userEmail);
-
-                  fetch(
-                        `http://127.0.0.1:5000/trainer/personal_data/${userEmail}`,
-                        {
-                              method: "GET",
-                              headers: {
-                                    "Content-Type": "application/json",
-                              },
+            fetch(`http://127.0.0.1:5000/trainer/personal_data/${email}`, {
+                  method: "GET",
+                  headers: {
+                        "Content-Type": "application/json",
+                  },
+            })
+                  .then((response) => response.json())
+                  .then((data) => {
+                        if (data) {
+                              setPlaceholders(data);
+                              setFormData({
+                                    name: data.name || "",
+                                    last_name: data.last_name || "",
+                                    new_email: data.email || "",
+                                    phone_number: data.phone_number || "",
+                                    license_number: data.license_number || "",
+                              });
                         }
-                  )
-                        .then((response) => response.json())
-                        .then((data) => {
-                              if (data) {
-                                    setPlaceholders(data);
-                                    setFormData({
-                                          name: data.name || "",
-                                          last_name: data.last_name || "",
-                                          new_email: data.email || "",
-                                          phone_number: data.phone_number || "",
-                                          license_number:
-                                                data.license_number || "",
-                                    });
-                              }
-                        })
-                        .catch(() => {
-                              setMessage("Failed to fetch user data.");
-                        });
-            } else {
-                  setMessage("No token found. Please log in.");
-            }
+                  })
+                  .catch(() => {
+                        setMessage("Failed to fetch user data.");
+                  });
       }, []);
 
       const handleInputChange = (e) => {
