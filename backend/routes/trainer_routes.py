@@ -100,7 +100,6 @@ def get_archers_from_trainer(email):
             "name": archer.name,
             "last_name": archer.last_name,
             "email": archer.email,
-            "license_number": archer.license_number
         })
     
     return jsonify({"archers": archers_data}), 200

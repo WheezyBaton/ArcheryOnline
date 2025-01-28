@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_bcrypt import Bcrypt
 from flask_cors import CORS
+from flask_socketio import SocketIO
 
 app = Flask(__name__)
 
@@ -12,6 +13,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = 'your_secret_key'
 app.config['JWT_COOKIE_NAME'] = 'access_token'
 CORS(app, supports_credentials=True)
+socketio = SocketIO(app, cors_allowed_origins="*") 
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
