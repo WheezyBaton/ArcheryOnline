@@ -2,15 +2,18 @@ from flask import jsonify, request
 from backend import app, db
 from backend.models.trainer import Trainer
 from backend.models.archer import Archer
+from backend.models.club import Club
 
 @app.route("/trainer/add", methods=['POST'])
 def create_trainer():
     data = request.get_json()
     print(f"Create account request: {data}")
-    
+
+    existing_archer = Archer.query.filter_by(email=data["email"]).first()
     existing_trainer = Trainer.query.filter_by(email=data["email"]).first()
-    if existing_trainer:
-        return jsonify({"message": "Account with this email already exists"}), 409
+    existing_club = Club.query.filter_by(email=data["email"]).first()
+    if existing_archer or existing_trainer or existing_club:
+        return jsonify({"message": "Account already exists"}), 409
     
     new_trainer = Trainer(
         name=data["name"],
@@ -103,3 +106,23 @@ def get_archers_from_trainer(email):
         })
     
     return jsonify({"archers": archers_data}), 200
+
+@app.route("/trainer/<email>/club", methods=['GET'])
+def get_trainer_club(email):
+    trainer = Trainer.query.filter_by(email=email).first()
+    if not trainer:
+        return jsonify({"message": "Trainer not found"}), 404
+
+    if not trainer.club_id:
+        return jsonify({"message": "No club assigned"}), 404
+
+    club = Club.query.get(trainer.club_id)
+    if not club:
+        return jsonify({"message": "Club not found"}), 404
+
+    return jsonify({
+        "name": club.name,
+        "address": club.address,
+        "phone_number": club.phone_number,
+        "email": club.email
+    }), 200

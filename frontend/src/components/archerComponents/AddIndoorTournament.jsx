@@ -126,7 +126,11 @@ const AddIndoorTournament = ({ email }) => {
                                     Total Score: {calculateTotalScore(series)}
                               </h3>
                         </div>
-                        <button type="submit" disabled={loading}>
+                        <button
+                              className="nav-button"
+                              type="submit"
+                              disabled={loading}
+                        >
                               {loading ? "Adding..." : "Add Tournament"}
                         </button>
                   </form>

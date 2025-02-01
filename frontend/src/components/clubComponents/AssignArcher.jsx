@@ -34,7 +34,7 @@ export default function AssignArcher({ clubEmail }) {
 
       return (
             <div>
-                  <h2>Assign Archer to Club</h2>
+                  <h2>Assign archer to club</h2>
 
                   <input
                         type="email"
@@ -43,7 +43,9 @@ export default function AssignArcher({ clubEmail }) {
                         onChange={(e) => setArcherEmail(e.target.value)}
                   />
 
-                  <button onClick={handleAssign}>Assign Archer</button>
+                  <button className="nav-button" onClick={handleAssign}>
+                        Assign archer
+                  </button>
 
                   {message && <p style={{ color: "green" }}>{message}</p>}
                   {error && <p style={{ color: "red" }}>{error}</p>}

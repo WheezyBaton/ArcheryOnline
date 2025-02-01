@@ -1,4 +1,5 @@
 import { useState } from "react";
+import "./addTraining.css";
 
 const AddTraining = ({ email }) => {
       const [quantityOfShots, setQuantityOfShots] = useState("");
@@ -50,8 +51,10 @@ const AddTraining = ({ email }) => {
             <div>
                   <h2>Add Training</h2>
                   <form onSubmit={handleSubmit}>
-                        <div>
-                              <label>Quantity of Shots:</label>
+                        <div className="training-add-inputs">
+                              <label className="training-add-label">
+                                    Quantity of Shots:
+                              </label>
                               <input
                                     type="number"
                                     value={quantityOfShots}
@@ -61,8 +64,10 @@ const AddTraining = ({ email }) => {
                                     required
                               />
                         </div>
-                        <div>
-                              <label>Distance:</label>
+                        <div className="training-add-inputs">
+                              <label className="training-add-label">
+                                    Distance:
+                              </label>
                               <input
                                     type="number"
                                     value={distance}
@@ -72,8 +77,10 @@ const AddTraining = ({ email }) => {
                                     required
                               />
                         </div>
-                        <div>
-                              <label>Training Date:</label>
+                        <div className="training-add-inputs">
+                              <label className="training-add-label">
+                                    Training Date:
+                              </label>
                               <input
                                     type="datetime-local"
                                     value={trainingDate}
@@ -83,7 +90,11 @@ const AddTraining = ({ email }) => {
                                     required
                               />
                         </div>
-                        <button type="submit" disabled={isSubmitting}>
+                        <button
+                              className="nav-button"
+                              type="submit"
+                              disabled={isSubmitting}
+                        >
                               {isSubmitting ? "Submitting..." : "Add Training"}
                         </button>
                   </form>

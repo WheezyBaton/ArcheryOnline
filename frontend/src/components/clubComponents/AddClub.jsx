@@ -1,4 +1,5 @@
 import { useState } from "react";
+import "../addUser.css";
 
 const AddClub = () => {
       const [formData, setFormData] = useState({
@@ -48,12 +49,11 @@ const AddClub = () => {
 
       return (
             <div>
-                  <h1>Add Club</h1>
                   {message && <p style={{ color: "green" }}>{message}</p>}
                   {error && <p style={{ color: "red" }}>{error}</p>}
                   <form onSubmit={handleSubmit}>
-                        <div>
-                              <label>Name:</label>
+                        <div className="form-group">
+                              <label className="form-group-label">Name:</label>
                               <input
                                     type="text"
                                     name="name"
@@ -62,8 +62,10 @@ const AddClub = () => {
                                     required
                               />
                         </div>
-                        <div>
-                              <label>Address:</label>
+                        <div className="form-group">
+                              <label className="form-group-label">
+                                    Address:
+                              </label>
                               <input
                                     type="text"
                                     name="address"
@@ -72,8 +74,10 @@ const AddClub = () => {
                                     required
                               />
                         </div>
-                        <div>
-                              <label>Phone Number:</label>
+                        <div className="form-group">
+                              <label className="form-group-label">
+                                    Phone Number:
+                              </label>
                               <input
                                     type="text"
                                     name="phone_number"
@@ -82,8 +86,8 @@ const AddClub = () => {
                                     required
                               />
                         </div>
-                        <div>
-                              <label>Email:</label>
+                        <div className="form-group">
+                              <label className="form-group-label">Email:</label>
                               <input
                                     type="email"
                                     name="email"
@@ -92,8 +96,10 @@ const AddClub = () => {
                                     required
                               />
                         </div>
-                        <div>
-                              <label>Password:</label>
+                        <div className="form-group">
+                              <label className="form-group-label">
+                                    Password:
+                              </label>
                               <input
                                     type="password"
                                     name="password"
@@ -102,7 +108,9 @@ const AddClub = () => {
                                     required
                               />
                         </div>
-                        <button type="submit">Add Club</button>
+                        <button className="nav-button" type="submit">
+                              Create account
+                        </button>
                   </form>
             </div>
       );

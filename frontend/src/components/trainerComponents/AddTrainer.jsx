@@ -1,4 +1,5 @@
 import { useState } from "react";
+import "../addUser.css";
 
 const AddTrainer = () => {
       const [formData, setFormData] = useState({
@@ -49,12 +50,11 @@ const AddTrainer = () => {
 
       return (
             <div>
-                  <h1>Add Trainer</h1>
                   {message && <p style={{ color: "green" }}>{message}</p>}
                   {error && <p style={{ color: "red" }}>{error}</p>}
                   <form onSubmit={handleSubmit}>
-                        <div>
-                              <label>Name:</label>
+                        <div className="form-group">
+                              <label className="form-group-label">Name:</label>
                               <input
                                     type="text"
                                     name="name"
@@ -63,8 +63,10 @@ const AddTrainer = () => {
                                     required
                               />
                         </div>
-                        <div>
-                              <label>Last Name:</label>
+                        <div className="form-group">
+                              <label className="form-group-label">
+                                    Last Name:
+                              </label>
                               <input
                                     type="text"
                                     name="last_name"
@@ -73,8 +75,8 @@ const AddTrainer = () => {
                                     required
                               />
                         </div>
-                        <div>
-                              <label>Email:</label>
+                        <div className="form-group">
+                              <label className="form-group-label">Email:</label>
                               <input
                                     type="text"
                                     name="email"
@@ -83,8 +85,10 @@ const AddTrainer = () => {
                                     required
                               />
                         </div>
-                        <div>
-                              <label>Phone number:</label>
+                        <div className="form-group">
+                              <label className="form-group-label">
+                                    Phone number:
+                              </label>
                               <input
                                     type="text"
                                     name="phone_number"
@@ -93,8 +97,10 @@ const AddTrainer = () => {
                                     required
                               />
                         </div>
-                        <div>
-                              <label>License number:</label>
+                        <div className="form-group">
+                              <label className="form-group-label">
+                                    License number:
+                              </label>
                               <input
                                     type="text"
                                     name="license_number"
@@ -103,8 +109,10 @@ const AddTrainer = () => {
                                     required
                               />
                         </div>
-                        <div>
-                              <label>Password:</label>
+                        <div className="form-group">
+                              <label className="form-group-label">
+                                    Password:
+                              </label>
                               <input
                                     type="password"
                                     name="password"
@@ -113,7 +121,9 @@ const AddTrainer = () => {
                                     required
                               />
                         </div>
-                        <button type="submit">Add Trainer</button>
+                        <button className="nav-button" type="submit">
+                              Create account
+                        </button>
                   </form>
             </div>
       );

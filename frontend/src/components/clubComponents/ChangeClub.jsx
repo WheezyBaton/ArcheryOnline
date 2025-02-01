@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import "../change.css";
 
 const ChangeClub = ({ email }) => {
       const [formData, setFormData] = useState({
@@ -12,7 +13,7 @@ const ChangeClub = ({ email }) => {
       const [loading, setLoading] = useState(false);
 
       useEffect(() => {
-            fetch(`http://127.0.0.1:5000/club/${userEmail}`, {
+            fetch(`http://127.0.0.1:5000/club/${email}`, {
                   method: "GET",
                   headers: {
                         "Content-Type": "application/json",
@@ -75,7 +76,6 @@ const ChangeClub = ({ email }) => {
 
       return (
             <div>
-                  <h2>Change Club Data</h2>
                   <form onSubmit={handleSubmit}>
                         <label>
                               Name:
@@ -128,8 +128,12 @@ const ChangeClub = ({ email }) => {
                                     }
                               />
                         </label>
-                        <button type="submit" disabled={loading}>
-                              {loading ? "Updating..." : "Update Data"}
+                        <button
+                              className="nav-button"
+                              type="submit"
+                              disabled={loading}
+                        >
+                              {loading ? "Updating..." : "Update data"}
                         </button>
                   </form>
                   {message && <p>{message}</p>}

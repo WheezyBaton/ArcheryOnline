@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import "./getTraining.css";
 
 const GetTraining = ({ email }) => {
       const [trainings, setTrainings] = useState([]);
@@ -18,21 +19,21 @@ const GetTraining = ({ email }) => {
                   .catch((error) => {
                         setError(error.message);
                   });
-      }, []);
+      }, [email]);
 
       return (
             <div>
-                  <h2>Twoje Treningi</h2>
+                  <h3>Trainings</h3>
                   {error && <p>{error}</p>}
                   {trainings.length === 0 ? (
-                        <p>Brak dostępnych treningów.</p>
+                        <p>No training classes</p>
                   ) : (
                         <table>
                               <thead>
                                     <tr>
-                                          <th>Data</th>
-                                          <th>Dystans</th>
-                                          <th>Ilość strzałów</th>
+                                          <th>Date</th>
+                                          <th>Distance</th>
+                                          <th>Quantity shoots</th>
                                     </tr>
                               </thead>
                               <tbody>

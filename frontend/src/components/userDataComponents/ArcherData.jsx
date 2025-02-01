@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import "./userData.css";
 
 const ArcherData = ({ email }) => {
       const [archerData, setArcherData] = useState(null);
@@ -38,7 +39,7 @@ const ArcherData = ({ email }) => {
             };
 
             fetchArcherData();
-      }, [email]); // Zmieniamy zależność na email
+      }, [email]);
 
       if (loading) {
             return <div>Loading...</div>;
@@ -51,32 +52,23 @@ const ArcherData = ({ email }) => {
       if (archerData) {
             return (
                   <div>
-                        <h1>Archer Personal Data</h1>
-                        <ul>
-                              <li>
-                                    <strong>Name:</strong> {archerData.name}{" "}
-                                    {archerData.last_name}
-                              </li>
-                              <li>
-                                    <strong>Email:</strong> {archerData.email}
-                              </li>
-                              <li>
-                                    <strong>Gender:</strong> {archerData.gender}
-                              </li>
-                              <li>
-                                    <strong>Birth Year:</strong>{" "}
-                                    {archerData.birth_year}
-                              </li>
-                              <li>
-                                    <strong>License Number:</strong>{" "}
-                                    {archerData.license_number ||
-                                          "Not available"}
-                              </li>
-                              <li>
-                                    <strong>Club:</strong>{" "}
-                                    {archerData.club || "Not available"}
-                              </li>
-                        </ul>
+                        <strong>
+                              {archerData.name} {archerData.last_name}
+                        </strong>
+                        <li>
+                              <strong>Email:</strong> {archerData.email}
+                        </li>
+                        <li>
+                              <strong>Gender:</strong> {archerData.gender}
+                        </li>
+                        <li>
+                              <strong>Birth Year:</strong>{" "}
+                              {archerData.birth_year}
+                        </li>
+                        <li>
+                              <strong>License Number:</strong>{" "}
+                              {archerData.license_number || "Not available"}
+                        </li>
                   </div>
             );
       }

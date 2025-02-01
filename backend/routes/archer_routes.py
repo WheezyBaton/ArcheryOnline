@@ -1,6 +1,8 @@
 from flask import jsonify, request
 from backend import app, db
 from backend.models.archer import Archer
+from backend.models.trainer import Trainer
+from backend.models.club import Club
 
 @app.route("/archer/add", methods=['POST'])
 def create_archer():
@@ -8,8 +10,10 @@ def create_archer():
     print(f"Create account request: {data}")
     
     existing_archer = Archer.query.filter_by(email=data["email"]).first()
-    if existing_archer:
-        return jsonify({"message": "Archer already exists"}), 409
+    existing_trainer = Trainer.query.filter_by(email=data["email"]).first()
+    existing_club = Club.query.filter_by(email=data["email"]).first()
+    if existing_archer or existing_trainer or existing_club:
+        return jsonify({"message": "Account already exists"}), 409
     
     archer = Archer(name=data["name"], last_name=data["last_name"], birth_year=data["birth_year"], gender=data["gender"], email=data["email"], role_id=3)
     archer.set_password(data["password"])
@@ -60,4 +64,46 @@ def get_archer(email):
         "license_number": account.license_number,
         "club": account.club_id,
         "trainer": account.trainer_id
+    }), 200
+
+@app.route("/archer/<email>/trainer", methods=['GET'])
+def get_archer_trainer(email):
+    archer = Archer.query.filter_by(email=email).first()
+    if not archer:
+        return jsonify({"message": "Archer not found"}), 404
+
+    if not archer.trainer_id:
+        return jsonify({"message": "No trainer assigned"}), 404
+
+    trainer = Trainer.query.get(archer.trainer_id)
+    if not trainer:
+        return jsonify({"message": "Trainer not found"}), 404
+
+    return jsonify({
+        "name": trainer.name,
+        "last_name": trainer.last_name,
+        "email": trainer.email,
+        "phone_number": trainer.phone_number,
+        "license_number": trainer.license_number,
+        "club": trainer.club_id
+    }), 200
+
+@app.route("/archer/<email>/club", methods=['GET'])
+def get_archer_club(email):
+    archer = Archer.query.filter_by(email=email).first()
+    if not archer:
+        return jsonify({"message": "Archer not found"}), 404
+
+    if not archer.club_id:
+        return jsonify({"message": "No club assigned"}), 404
+
+    club = Club.query.get(archer.club_id)
+    if not club:
+        return jsonify({"message": "Club not found"}), 404
+
+    return jsonify({
+        "name": club.name,
+        "address": club.address,
+        "phone_number": club.phone_number,
+        "email": club.email
     }), 200

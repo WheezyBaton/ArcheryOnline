@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import "../change.css";
 
 const ChangeArcher = ({ email }) => {
       const [formData, setFormData] = useState({
@@ -77,7 +78,6 @@ const ChangeArcher = ({ email }) => {
 
       return (
             <div>
-                  <h2>Change Archer Data</h2>
                   <form onSubmit={handleSubmit}>
                         <label>
                               Name:
@@ -144,8 +144,12 @@ const ChangeArcher = ({ email }) => {
                                     }
                               />
                         </label>
-                        <button type="submit" disabled={loading}>
-                              {loading ? "Updating..." : "Update Data"}
+                        <button
+                              className="nav-button"
+                              type="submit"
+                              disabled={loading}
+                        >
+                              {loading ? "Updating..." : "Update data"}
                         </button>
                   </form>
                   {message && <p>{message}</p>}

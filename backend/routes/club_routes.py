@@ -9,6 +9,15 @@ def create_club():
     data = request.get_json()
     print(f"Create club request: {data}")
 
+    required_keys = ["email", "name", "address", "phone_number", "password"]
+    if not all(key in data for key in required_keys):
+        return jsonify({"message": "Missing required data"}), 400
+
+    existing_archer = Archer.query.filter_by(email=data["email"]).first()
+    existing_trainer = Trainer.query.filter_by(email=data["email"]).first()
+    if existing_archer or existing_trainer:
+        return jsonify({"message": "Account already exists"}), 409
+    
     existing_club = Club.query.filter(
         (Club.name == data["name"]) | 
         (Club.address == data["address"]) | 
@@ -148,7 +157,8 @@ def delete_archer_from_club(email):
     
     if archer in club.archers:
         club.archers.remove(archer)
-        archer.club_id = None 
+        archer.club_id = None
+        archer.trainer_id = None 
         db.session.commit()
         return jsonify({"message": "Account deleted from club"}), 200
     else:
@@ -176,30 +186,18 @@ def assign_archer_to_trainer(club_email, archer_email, trainer_email):
     }), 200
 
 
-@app.route('/discharge/<club_email>/<archer_email>/<trainer_email>', methods=['POST'])
-def discharge_archer_from_trainer(club_email, archer_email, trainer_email):
-    club = Club.query.filter_by(email=club_email).first()
-    if not club:
-        return jsonify({"error": "Club not found"}), 404
+@app.route('/discharge/<archer_email>', methods=['POST'])
+def discharge_archer_from_trainer(archer_email):
 
-    archer = Archer.query.filter_by(email=archer_email, club_id=club.id).first()
+    archer = Archer.query.filter_by(email=archer_email).first()
     if not archer:
         return jsonify({"error": "Archer not found in this club"}), 404
-
-    trainer = Trainer.query.filter_by(email=trainer_email, club_id=club.id).first()
-    if not trainer:
-        return jsonify({"error": "Trainer not found in this club"}), 404
-
-    if archer.trainer_id != trainer.id:
-        return jsonify({
-            "error": f"Archer '{archer.name} {archer.last_name}' is not assigned to Trainer '{trainer.name} {trainer.last_name}'"
-        }), 400
 
     archer.trainer_id = None
     db.session.commit()
 
     return jsonify({
-        "message": f"Archer '{archer.name} {archer.last_name}' has been discharge from Trainer '{trainer.name} {trainer.last_name}'"
+        "message": f"Archer '{archer.name} {archer.last_name}' has been discharge from Trainer"
     }), 200
 
 def send_invitation(user, user_type, club):

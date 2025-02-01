@@ -1,8 +1,7 @@
-import "./App.css";
 import Login from "./components/Login";
-import ArcherHome from "./components/archerComponents/ArcherHome";
-import TrainerHome from "./components/trainerComponents/TrainerHome";
-import ClubHome from "./components/clubComponents/ClubHome";
+import ArcherHome from "./components/Home/ArcherHome";
+import TrainerHome from "./components/Home/TrainerHome";
+import ClubHome from "./components/Home/ClubHome";
 import { useState, useEffect } from "react";
 
 function App() {
@@ -63,7 +62,7 @@ function App() {
 
       switch (role) {
             case "Archer":
-                  return <ArcherHome email={email} />;
+                  return <ArcherHome email={email} role={role} />;
             case "Trainer":
                   return <TrainerHome email={email} role={role} />;
             case "Club Manager":

@@ -3,15 +3,16 @@ import App from "./../App";
 import AddArcher from "./archerComponents/AddArcher";
 import AddClub from "./clubComponents/AddClub";
 import AddTrainer from "./trainerComponents/AddTrainer";
+import "./Login.css";
 
 export default function Login() {
       const [email, setEmail] = useState("");
       const [password, setPassword] = useState("");
       const [token, setToken] = useState(null);
       const [isLoggedIn, setIsLoggedIn] = useState(false);
-      const [isSignUp, setIsSignUp] = useState(false);
-      const [isAddClub, setIsAddClub] = useState(false);
-      const [isAddTrainer, setIsAddTrainer] = useState(false);
+      const [showAddArcher, setShowAddArcher] = useState(false);
+      const [showAddClub, setShowAddClub] = useState(false);
+      const [showAddTrainer, setShowAddTrainer] = useState(false);
 
       const handleLogin = async (e) => {
             e.preventDefault();
@@ -37,53 +38,75 @@ export default function Login() {
       };
 
       const handleSignUpClick = () => {
-            setIsSignUp(true);
+            setShowAddArcher(true);
+            setShowAddClub(false);
+            setShowAddTrainer(false);
       };
 
       const handleAddClubClick = () => {
-            setIsAddClub(true);
+            setShowAddArcher(false);
+            setShowAddClub(true);
+            setShowAddTrainer(false);
       };
 
       const handleAddTrainerClick = () => {
-            setIsAddTrainer(true);
+            setShowAddArcher(false);
+            setShowAddClub(false);
+            setShowAddTrainer(true);
       };
 
       if (isLoggedIn) {
             return <App />;
       }
 
-      if (isSignUp) {
-            return <AddArcher />;
-      }
-
-      if (isAddClub) {
-            return <AddClub />;
-      }
-
-      if (isAddTrainer) {
-            return <AddTrainer />;
-      }
-
       return (
-            <div>
-                  <form onSubmit={handleLogin}>
-                        <input
-                              type="text"
-                              placeholder="Email"
-                              value={email}
-                              onChange={(e) => setEmail(e.target.value)}
-                        />
-                        <input
-                              type="password"
-                              placeholder="Password"
-                              value={password}
-                              onChange={(e) => setPassword(e.target.value)}
-                        />
-                        <button type="submit">Login</button>
-                  </form>
-                  <button onClick={handleSignUpClick}>Załóż Konto</button>
-                  <button onClick={handleAddClubClick}>Dodaj Klub</button>
-                  <button onClick={handleAddTrainerClick}>Dodaj Trenera</button>
+            <div className="content">
+                  <div className="login">
+                        <form className="loginContent" onSubmit={handleLogin}>
+                              <input
+                                    className="loginInput"
+                                    type="text"
+                                    placeholder="Email"
+                                    value={email}
+                                    onChange={(e) => setEmail(e.target.value)}
+                              />
+                              <input
+                                    className="loginInput"
+                                    type="password"
+                                    placeholder="Password"
+                                    value={password}
+                                    onChange={(e) =>
+                                          setPassword(e.target.value)
+                                    }
+                              />
+                              <button className="nav-button" type="submit">
+                                    Login
+                              </button>
+                        </form>
+                        <div className="buttons">
+                              <button
+                                    className="nav-button"
+                                    onClick={handleSignUpClick}
+                              >
+                                    Add Archer
+                              </button>
+                              <button
+                                    className="nav-button"
+                                    onClick={handleAddClubClick}
+                              >
+                                    Add Club
+                              </button>
+                              <button
+                                    className="nav-button"
+                                    onClick={handleAddTrainerClick}
+                              >
+                                    Add Trainer
+                              </button>
+                        </div>
+                  </div>
+                  {showAddArcher && <AddArcher />}
+                  {showAddClub && <AddClub />}
+                  {showAddTrainer && <AddTrainer />}
             </div>
       );
 }

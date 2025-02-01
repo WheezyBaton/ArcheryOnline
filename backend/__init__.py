@@ -7,14 +7,17 @@ from flask_socketio import SocketIO
 
 app = Flask(__name__)
 
+CORS(app, origins=["http://localhost:5173"], supports_credentials=True)
+
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////Users/sebastianblaszczyk/studia/ArcheryOnline/backend/data/database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 app.config['SECRET_KEY'] = 'your_secret_key'
 app.config['JWT_COOKIE_NAME'] = 'access_token'
-CORS(app, supports_credentials=True)
-socketio = SocketIO(app, cors_allowed_origins="*") 
 
+socketio = SocketIO(app, cors_allowed_origins="http://localhost:5173")
+
+socketio.init_app(app)
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 bcrypt = Bcrypt()

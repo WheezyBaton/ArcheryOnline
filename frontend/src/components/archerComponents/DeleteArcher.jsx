@@ -1,4 +1,5 @@
 import { useState } from "react";
+import "../Home/home.css";
 
 const DeleteArcher = ({ email }) => {
       const [message, setMessage] = useState("");

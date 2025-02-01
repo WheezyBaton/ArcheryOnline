@@ -45,22 +45,18 @@ const ClubData = ({ email }) => {
       if (clubData) {
             return (
                   <div>
-                        <h1>Club Data</h1>
-                        <ul>
-                              <li>
-                                    <strong>Name:</strong> {clubData.name}
-                              </li>
-                              <li>
-                                    <strong>Address:</strong> {clubData.address}
-                              </li>
-                              <li>
-                                    <strong>Phone Number:</strong>{" "}
-                                    {clubData.phone_number}
-                              </li>
-                              <li>
-                                    <strong>Email:</strong> {clubData.email}
-                              </li>
-                        </ul>
+                        <strong>{clubData.name}</strong>
+
+                        <li>
+                              <strong>Address:</strong> {clubData.address}
+                        </li>
+                        <li>
+                              <strong>Phone Number:</strong>{" "}
+                              {clubData.phone_number}
+                        </li>
+                        <li>
+                              <strong>Email:</strong> {clubData.email}
+                        </li>
                   </div>
             );
       }

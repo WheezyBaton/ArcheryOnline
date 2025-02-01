@@ -1,52 +1,52 @@
 import { useEffect, useState } from "react";
 import { io } from "socket.io-client";
 
-const Zaproszenia = () => {
-      const [zaproszenia, setZaproszenia] = useState([]);
+const AcceptInvite = () => {
+      const [invites, setInvites] = useState([]);
 
       useEffect(() => {
             const socket = io("http://127.0.0.1:5000");
 
-            socket.on("zaproszenie_klubowe", (zaproszenie) => {
-                  setZaproszenia((prev) => [...prev, zaproszenie]);
+            socket.on("zaproszenie_klubowe", (invite) => {
+                  setInvites((prev) => [...prev, invite]);
             });
 
             return () => socket.disconnect();
       }, []);
 
-      const zaakceptujZaproszenie = async (email, userType, clubEmail) => {
+      const acceptInvite = async (email, userType, clubEmail) => {
             const response = await fetch(
                   `http://127.0.0.1:5000/accept-invite/${email}/${userType}/${clubEmail}`,
                   { method: "POST" }
             );
             if (response.ok) {
-                  alert("Zaproszenie zaakceptowane!");
-                  setZaproszenia((prev) =>
-                        prev.filter((zap) => zap.email !== email)
+                  alert("Invitation accepted!");
+                  setInvites((prev) =>
+                        prev.filter((inv) => inv.email !== email)
                   );
             } else {
-                  alert("Nie udało się zaakceptować zaproszenia.");
+                  alert("The invitation could not be accepted.");
             }
       };
 
       return (
             <div>
-                  <h2>Zaproszenia do Klubu</h2>
                   <ul>
-                        {zaproszenia.map((zaproszenie, index) => (
+                        {invites.map((invite, index) => (
                               <li key={index}>
-                                    {zaproszenie.name} ({zaproszenie.user_type})
-                                    zaproszony do {zaproszenie.club_name}.
+                                    {invite.name} ({invite.user_type})
+                                    zaproszony do {invite.club_name}.
                                     <button
+                                          className="nav-button"
                                           onClick={() =>
-                                                zaakceptujZaproszenie(
-                                                      zaproszenie.email,
-                                                      zaproszenie.user_type,
-                                                      zaproszenie.club_email
+                                                acceptInvite(
+                                                      invite.email,
+                                                      invite.user_type,
+                                                      invite.club_email
                                                 )
                                           }
                                     >
-                                          Zaakceptuj
+                                          Accept!
                                     </button>
                               </li>
                         ))}
@@ -55,4 +55,4 @@ const Zaproszenia = () => {
       );
 };
 
-export default Zaproszenia;
+export default AcceptInvite;

@@ -24,16 +24,13 @@ const GetIndoorTournament = ({ email }) => {
 
       return (
             <div>
+                  <h3>Indoor tournaments:</h3>
                   {tournaments.map((tournament, index) => (
                         <div
                               key={index}
                               onClick={() => handleToggleDetails(index)}
                         >
-                              <p>{`Indoor Tournament ${index + 1}: ${
-                                    tournament.date
-                              }, ${tournament.distance}m, Total Score: ${
-                                    tournament.total_score
-                              }`}</p>
+                              <p>{`${tournament.date}, ${tournament.distance}m, Total Score: ${tournament.total_score}`}</p>
                               {showDetails === index && (
                                     <table>
                                           <thead>

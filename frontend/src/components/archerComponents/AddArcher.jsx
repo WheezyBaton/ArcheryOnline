@@ -1,10 +1,12 @@
 import { useState } from "react";
+import "../addUser.css";
 
 const AddArcher = () => {
       const [formData, setFormData] = useState({
             name: "",
             last_name: "",
             birth_year: "",
+            license_number: "",
             gender: "",
             email: "",
             password: "",
@@ -49,12 +51,11 @@ const AddArcher = () => {
 
       return (
             <div>
-                  <h1>Add Archer</h1>
                   {message && <p style={{ color: "green" }}>{message}</p>}
                   {error && <p style={{ color: "red" }}>{error}</p>}
                   <form onSubmit={handleSubmit}>
-                        <div>
-                              <label>Name:</label>
+                        <div className="form-group">
+                              <label className="form-group-label">Name:</label>
                               <input
                                     type="text"
                                     name="name"
@@ -63,8 +64,10 @@ const AddArcher = () => {
                                     required
                               />
                         </div>
-                        <div>
-                              <label>Last Name:</label>
+                        <div className="form-group">
+                              <label className="form-group-label">
+                                    Last Name:
+                              </label>
                               <input
                                     type="text"
                                     name="last_name"
@@ -73,8 +76,10 @@ const AddArcher = () => {
                                     required
                               />
                         </div>
-                        <div>
-                              <label>Birth Year:</label>
+                        <div className="form-group">
+                              <label className="form-group-label">
+                                    Birth Year:
+                              </label>
                               <input
                                     type="number"
                                     name="birth_year"
@@ -83,8 +88,22 @@ const AddArcher = () => {
                                     required
                               />
                         </div>
-                        <div>
-                              <label>Gender:</label>
+                        <div className="form-group">
+                              <label className="form-group-label">
+                                    License number:
+                              </label>
+                              <input
+                                    type="text"
+                                    name="license_number"
+                                    value={formData.license_number}
+                                    onChange={handleChange}
+                                    required
+                              />
+                        </div>
+                        <div className="form-group">
+                              <label className="form-group-label">
+                                    Gender:
+                              </label>
                               <select
                                     name="gender"
                                     value={formData.gender}
@@ -97,8 +116,8 @@ const AddArcher = () => {
                                     <option value="Other">Other</option>
                               </select>
                         </div>
-                        <div>
-                              <label>Email:</label>
+                        <div className="form-group">
+                              <label className="form-group-label">Email:</label>
                               <input
                                     type="email"
                                     name="email"
@@ -107,8 +126,10 @@ const AddArcher = () => {
                                     required
                               />
                         </div>
-                        <div>
-                              <label>Password:</label>
+                        <div className="form-group">
+                              <label className="form-group-label">
+                                    Password:
+                              </label>
                               <input
                                     type="password"
                                     name="password"
@@ -117,7 +138,9 @@ const AddArcher = () => {
                                     required
                               />
                         </div>
-                        <button type="submit">Add Archer</button>
+                        <button className="nav-button" type="submit">
+                              Create account
+                        </button>
                   </form>
             </div>
       );

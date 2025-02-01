@@ -32,7 +32,7 @@ const TrainerData = ({ email }) => {
             };
 
             fetchTrainerData();
-      }, []);
+      }, [email]);
 
       if (loading) {
             return <div>Loading...</div>;
@@ -45,29 +45,21 @@ const TrainerData = ({ email }) => {
       if (trainerData) {
             return (
                   <div>
-                        <h1> Personal Data</h1>
-                        <ul>
-                              <li>
-                                    <strong>Name:</strong> {trainerData.name}{" "}
-                                    {trainerData.last_name}
-                              </li>
-                              <li>
-                                    <strong>Email:</strong> {trainerData.email}
-                              </li>
-                              <li>
-                                    <strong>Number phone:</strong>{" "}
-                                    {trainerData.phone_number}
-                              </li>
-                              <li>
-                                    <strong>License Number:</strong>{" "}
-                                    {trainerData.license_number ||
-                                          "Not available"}
-                              </li>
-                              <li>
-                                    <strong>Club:</strong>{" "}
-                                    {trainerData.club || "Not available"}
-                              </li>
-                        </ul>
+                        <strong>
+                              {trainerData.name} {trainerData.last_name}
+                        </strong>
+
+                        <li>
+                              <strong>Email:</strong> {trainerData.email}
+                        </li>
+                        <li>
+                              <strong>Number phone:</strong>{" "}
+                              {trainerData.phone_number}
+                        </li>
+                        <li>
+                              <strong>License Number:</strong>{" "}
+                              {trainerData.license_number || "Not available"}
+                        </li>
                   </div>
             );
       }

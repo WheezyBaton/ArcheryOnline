@@ -1,0 +1,34 @@
+.message-container {
+      display: flex;
+      margin: 5px 0;
+}
+
+.my-message {
+      justify-content: flex-end;
+}
+
+.other-message {
+      justify-content: flex-start;
+}
+
+.message-bubble {
+      max-width: 60%;
+      padding: 10px;
+      border-radius: 15px;
+      word-wrap: break-word;
+      font-size: 14px;
+}
+
+.my-message .message-bubble {
+      background-color: #007bff;
+      color: white;
+      text-align: right;
+      border-top-right-radius: 0;
+}
+
+.other-message .message-bubble {
+      background-color: #f1f1f1;
+      color: black;
+      text-align: left;
+      border-top-left-radius: 0;
+}

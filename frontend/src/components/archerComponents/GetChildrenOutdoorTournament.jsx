@@ -30,11 +30,7 @@ const GetYouthOutdoorTournament = ({ email }) => {
                               key={index}
                               onClick={() => handleToggleDetails(index)}
                         >
-                              <p>{`Outdoor Tournament ${index + 1}: ${
-                                    tournament.date
-                              }, ${tournament.distance}m, Total Score: ${
-                                    tournament.total_score
-                              }`}</p>
+                              <p>{`Outdoor: ${tournament.date}, ${tournament.distance}m, Total Score: ${tournament.total_score}`}</p>
                               {showDetails === index && (
                                     <table>
                                           <thead>
